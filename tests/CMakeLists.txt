@@ -1,10 +1,5 @@
 project(tests)
+add_subdirectory(lib/Catch2)
 
-# 'lib' is the folder with Google Test sources
-add_subdirectory(lib)
-include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
-
-# 'Google_Tests_run' is the target name
-# 'test1.cpp test2.cpp' are source files with tests
-add_executable(tests_run TempTest.cpp)
-target_link_libraries(tests_run gtest gtest_main)
+add_executable(tests LexerTest.cpp ../src/error/ErrorPrinter.cpp ../src/lexer/Lexer.cpp)
+target_link_libraries(tests Catch2::Catch2WithMain)
