@@ -14,17 +14,17 @@ public:
     explicit Lexer(std::string source) : source(source) {};
     std::string source;
     std::vector<Token> tokens{};
-    virtual void tokenize(const ErrorPrinter& printer);
-    void print();
+    void tokenize(ErrorPrinter& printer);
+    void print() const;
 private:
     char at(){
         return source[currentChar];
     }
     void pushToken(TokenType type, std::string value){
-        tokens.emplace_back(type, value, line, charOnLine);
+        tokens.emplace_back(type, value, line, charIndexOnLine);
     }
     void pushToken(TokenType type, char c){
-        tokens.emplace_back(type, std::string(1, c), line, charOnLine);
+        tokens.emplace_back(type, std::string(1, c), line, charIndexOnLine);
     }
     void handleComment();
     void advance();
@@ -32,7 +32,7 @@ private:
     unsigned int currentChar = 0;
     unsigned int line = 1;
     std::string lineStr = "";
-    unsigned int charOnLine = 1;
+    unsigned int charIndexOnLine = 0;
 };
 
 #endif //MATURSKI_LEXER_H

@@ -23,7 +23,7 @@ void ErrorPrinter::extractLines(const std::string &source) {
     }
 }
 
-void ErrorPrinter::printError(unsigned int line, unsigned int offset, std::string message) const {
+void ErrorPrinter::printError(unsigned int line, unsigned int offset, std::string message) {
     cout << ANSI_RED << "Error on line " << line << ": " << ANSI_RESET << message << "\n \t";
     cout << line << " | " << lines.at(line - 1) << "\n";
     std::string lineNo = std::to_string(line);
@@ -38,4 +38,5 @@ void ErrorPrinter::printError(unsigned int line, unsigned int offset, std::strin
         cout << ANSI_RED <<  "~";
     }
     cout << ANSI_RED << "^" << ANSI_RESET;
+    numberOfPrintedErrors++;
 }
