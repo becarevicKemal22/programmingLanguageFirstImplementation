@@ -3,7 +3,7 @@
 #include <string>
 
 #include <Lexer.h>
-#include <ErrorPrinter.h>
+#include "ConsoleErrorPrinter.h"
 
 void repl(){
     std::cout << "Repl v0.1\n";
@@ -28,7 +28,7 @@ int main(int argc, char* argv[]) {
                 source += line;
             }
             file.close();
-            ErrorPrinter printer(source);
+            ConsoleErrorPrinter printer(source);
             Lexer lexer(source);
             lexer.tokenize(printer);
             lexer.print();

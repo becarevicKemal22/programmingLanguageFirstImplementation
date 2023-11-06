@@ -12,9 +12,8 @@ class ErrorPrinter {
 public:
     explicit ErrorPrinter(const std::string& source);
     virtual ~ErrorPrinter() = default;
-    void printError(unsigned int line, unsigned int offset, std::string message);
-    unsigned int numberOfPrintedErrors = 0; // For testing purposes
-private:
+    virtual void printError(unsigned int line, unsigned int offset, std::string message) = 0;
+protected:
     std::vector<std::string> lines;
     void extractLines(const std::string& source);
 };

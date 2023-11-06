@@ -5,12 +5,13 @@
 #include <catch2/catch_test_macros.hpp>
 
 #include <Lexer.h>
-#include <ErrorPrinter.h>
+#include <MockErrorPrinter.h>
+
 #include <iostream>
 
 TEST_CASE("Returns correct token", "[Lexer]"){
     std::string source = "(){}[]+-*/;:.,= ==";
-    ErrorPrinter printer(source);
+    MockErrorPrinter printer;
     Lexer lexer(source);
     lexer.tokenize(printer);
     CHECK(lexer.tokens.size() == 17);
@@ -35,7 +36,7 @@ TEST_CASE("Returns correct token", "[Lexer]"){
 
 TEST_CASE("Ignores commments", "[Lexer]"){
     std::string source = "{} // Comment \n [";
-    ErrorPrinter printer(source);
+    MockErrorPrinter printer;
     Lexer lexer(source);
     lexer.tokenize(printer);
     REQUIRE(lexer.tokens.size() == 4);
@@ -44,7 +45,7 @@ TEST_CASE("Ignores commments", "[Lexer]"){
 
 TEST_CASE("Numbers lines and offsets correctly", "[Lexer]"){
     std::string source = "{ {\n    {\n\t{";
-    ErrorPrinter printer(source);
+    MockErrorPrinter printer;
     Lexer lexer(source);
     lexer.tokenize(printer);
     REQUIRE(lexer.tokens.size() == 5);
@@ -63,15 +64,15 @@ TEST_CASE("Numbers lines and offsets correctly", "[Lexer]"){
 
 TEST_CASE("Throws and outputs error on unrecognized token", "[Lexer]"){
     std::string source = "`";
-    ErrorPrinter printer(source);
+    MockErrorPrinter printer;
     Lexer lexer(source);
     REQUIRE_THROWS(lexer.tokenize(printer));
-    REQUIRE(printer.numberOfPrintedErrors == 1);
+    REQUIRE(printer.numberOfTimesCalled == 1);
 }
 
 TEST_CASE("Correctly interprets numbers", "[Lexer]"){
     std::string source = "3.25 5";
-    ErrorPrinter printer(source);
+    MockErrorPrinter printer;
     Lexer lexer(source);
     try{
         lexer.tokenize(printer);
@@ -87,7 +88,7 @@ TEST_CASE("Correctly interprets numbers", "[Lexer]"){
 
 TEST_CASE("Correctly tokenizes identifiers", "[Lexer]"){
     std::string source = "varijabla var2";
-    ErrorPrinter printer(source);
+    MockErrorPrinter printer;
     Lexer lexer(source);
     try{
         lexer.tokenize(printer);
@@ -103,7 +104,7 @@ TEST_CASE("Correctly tokenizes identifiers", "[Lexer]"){
 
 TEST_CASE("Correctly tokenizes keywords", "[Lexer]"){
     std::string source = "var konst ako dok";
-    ErrorPrinter printer(source);
+    MockErrorPrinter printer;
     Lexer lexer(source);
     try{
         lexer.tokenize(printer);
@@ -123,7 +124,7 @@ TEST_CASE("Correctly tokenizes keywords", "[Lexer]"){
 
 TEST_CASE("Tokenizes variable declaration", "[Lexer]"){
     std::string source = "var var2 = 5.36;";
-    ErrorPrinter printer(source);
+    MockErrorPrinter printer;
     Lexer lexer(source);
     try{
         lexer.tokenize(printer);
@@ -148,7 +149,7 @@ TEST_CASE("Program sample", "[Lexer]"){
                          "ako(a == 5){\n"
                          "    a = 10;\n"
                          "}";
-    ErrorPrinter printer(source);
+    MockErrorPrinter printer;
     Lexer lexer(source);
     try{
         lexer.tokenize(printer);
