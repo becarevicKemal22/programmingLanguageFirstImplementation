@@ -7,7 +7,7 @@
 
 #include <vector>
 #include "Token.h"
-#include "../error/ErrorPrinter.h"
+#include "ErrorPrinter.h"
 
 class Lexer {
 public:

@@ -2,13 +2,8 @@
 // Created by kemal on 06/11/2023.
 //
 
-#include <vector>
 #include "Parser.h"
-#include "../error/ErrorPrinter.h"
-#include "../lexer/Token.h"
-#include "../lexer/Lexer.h"
-#include "./ast/Expression.h"
-#include "./ast/NumericLiteral.h"
+#include "Lexer.h"
 
 ast::Program Parser::parse(const std::string &source) {
     ast::Program program;
@@ -31,6 +26,8 @@ std::shared_ptr<ast::Expression> Parser::expression(){
 std::shared_ptr<ast::Expression> Parser::primaryExpression(){
     if(atType(TokenType::Broj)){
         return std::make_shared<ast::NumericLiteral>(advance());
+    }else if(atType(TokenType::Identifikator)){
+        return std::make_shared<ast::Identifier>(advance());
     }else{
         printer.printError(at().line, at().charOffset, "Unexpected token found.");
         throw std::runtime_error("Parsing error.");

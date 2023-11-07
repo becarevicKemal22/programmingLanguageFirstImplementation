@@ -6,10 +6,10 @@
 #define MATURSKI_PARSER_H
 
 #include <vector>
-#include "../error/ErrorPrinter.h"
-#include "./ast/Program.h"
-#include "../lexer/Token.h"
-#include "./ast/Expression.h"
+#include "ErrorPrinter.h"
+#include "Program.h"
+#include "Token.h"
+#include "Expression.h"
 
 
 class Parser {

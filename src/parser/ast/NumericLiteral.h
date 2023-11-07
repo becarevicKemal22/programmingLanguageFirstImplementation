@@ -6,8 +6,8 @@
 #define MATURSKI_NUMERICLITERAL_H
 
 #include "Expression.h"
-#include "../../lexer/Token.h"
-#include "../visitor/Visitor.h"
+#include "Token.h"
+#include "Visitor.h"
 
 namespace ast{
     class NumericLiteral : public Expression {
@@ -17,6 +17,7 @@ namespace ast{
             number = std::stod(token->value);
         }
         double number;
+        TokenPtr token;
         ~NumericLiteral() override = default;
         void accept(Visitor* visitor) const override{
             visitor->visitNumericLiteral(this);

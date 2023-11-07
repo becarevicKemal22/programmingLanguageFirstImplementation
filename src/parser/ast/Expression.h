@@ -6,8 +6,8 @@
 #define MATURSKI_EXPRESSION_H
 
 #include "Statement.h"
-#include "../../lexer/Token.h"
-#include "../visitor/Visitor.h"
+#include "Token.h"
+#include "Visitor.h"
 
 namespace ast {
     typedef std::shared_ptr<Token> TokenPtr;
@@ -18,7 +18,6 @@ namespace ast {
         virtual void accept(Visitor* visitor) const{
             visitor->visitExpression(this);
         };
-        TokenPtr token;
     };
 }
 

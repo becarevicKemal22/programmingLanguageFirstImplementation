@@ -7,7 +7,7 @@
 
 enum class NodeType {
     Program,
-    NumberLiteral, Identifier
+    NumberLiteral, Identifier,
 };
 
 #endif //MATURSKI_NODETYPE_H

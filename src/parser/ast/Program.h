@@ -8,7 +8,7 @@
 #include <vector>
 #include <memory>
 #include "Statement.h"
-#include "../visitor/AstPrinter.h"
+#include "AstPrinter.h"
 
 namespace ast{
 
