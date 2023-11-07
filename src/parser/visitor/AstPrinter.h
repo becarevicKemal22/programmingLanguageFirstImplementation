@@ -9,6 +9,7 @@
 #include "Visitor.h"
 #include "Statement.h"
 #include "Expression.h"
+#include "BinaryExpression.h"
 #include "NumericLiteral.h"
 #include "Identifier.h"
 
@@ -22,6 +23,12 @@ class AstPrinter : public Visitor {
     // Expressions
     void visitExpression(const ast::Expression* expression) const override{
         cout << "";
+    };
+    void visitBinaryExpression(const ast::BinaryExpression* expression) const override{
+        cout << "( " << expression->_operator << " ";
+//        expression->left->accept(this);
+//        expression->right->print();
+        std::cout << ") ";
     };
     void visitNumericLiteral(const ast::NumericLiteral* numericLiteral) const override{
         cout << numericLiteral->number << " ";

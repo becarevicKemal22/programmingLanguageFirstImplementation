@@ -13,9 +13,10 @@ namespace ast {
     public:
         Statement() = default;
         virtual ~Statement() = default;
-        virtual void accept(Visitor* visitor) const {
-            visitor->visitStatement(this);
-        };
+//        virtual void accept(Visitor* visitor) const {
+//            visitor->visitStatement(this);
+//        };
+        virtual void print() = 0;
     };
 }
 

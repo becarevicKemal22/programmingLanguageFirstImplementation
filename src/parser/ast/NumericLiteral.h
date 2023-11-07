@@ -5,6 +5,7 @@
 #ifndef MATURSKI_NUMERICLITERAL_H
 #define MATURSKI_NUMERICLITERAL_H
 
+#include <iostream>
 #include "Expression.h"
 #include "Token.h"
 #include "Visitor.h"
@@ -19,8 +20,11 @@ namespace ast{
         double number;
         TokenPtr token;
         ~NumericLiteral() override = default;
-        void accept(Visitor* visitor) const override{
-            visitor->visitNumericLiteral(this);
+//        void accept(Visitor* visitor) const override{
+//            visitor->visitNumericLiteral(this);
+//        }
+        void print() override {
+            std::cout << number << " ";
         }
     };
 }

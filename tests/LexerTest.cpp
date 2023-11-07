@@ -86,6 +86,24 @@ TEST_CASE("Correctly interprets numbers", "[Lexer]"){
     REQUIRE(lexer.tokens[1].value == "5");
 }
 
+TEST_CASE("Correctly tokenizes number and dot edge case", "[Lexer]"){
+    std::string source = "12.3 45.";
+    MockErrorPrinter printer;
+    Lexer lexer(source);
+    try{
+        lexer.tokenize(printer);
+    }catch(std::runtime_error& err){
+        std::cout << err.what() << "\n";
+    }
+    REQUIRE(lexer.tokens.size() == 4);
+    REQUIRE(lexer.tokens[0].type == TokenType::Broj);
+    REQUIRE(lexer.tokens[0].value == "12.3");
+    REQUIRE(lexer.tokens[1].type == TokenType::Broj);
+    REQUIRE(lexer.tokens[1].value == "45");
+    REQUIRE(lexer.tokens[2].type == TokenType::Dot);
+    REQUIRE(lexer.tokens[2].value == ".");
+}
+
 TEST_CASE("Correctly tokenizes identifiers", "[Lexer]"){
     std::string source = "varijabla var2";
     MockErrorPrinter printer;
@@ -103,7 +121,7 @@ TEST_CASE("Correctly tokenizes identifiers", "[Lexer]"){
 }
 
 TEST_CASE("Correctly tokenizes keywords", "[Lexer]"){
-    std::string source = "var konst ako dok";
+    std::string source = "var konst ako dok prazno tacno netacno";
     MockErrorPrinter printer;
     Lexer lexer(source);
     try{
@@ -111,7 +129,7 @@ TEST_CASE("Correctly tokenizes keywords", "[Lexer]"){
     }catch(std::runtime_error& err){
         std::cout << err.what() << "\n";
     }
-    REQUIRE(lexer.tokens.size() == 5);
+    REQUIRE(lexer.tokens.size() == 8);
     CHECK(lexer.tokens[0].type == TokenType::Var);
     CHECK(lexer.tokens[0].value == "var");
     CHECK(lexer.tokens[1].type == TokenType::Konst);
@@ -120,6 +138,12 @@ TEST_CASE("Correctly tokenizes keywords", "[Lexer]"){
     CHECK(lexer.tokens[2].value == "ako");
     CHECK(lexer.tokens[3].type == TokenType::Dok);
     CHECK(lexer.tokens[3].value == "dok");
+    CHECK(lexer.tokens[4].type == TokenType::Prazno);
+    CHECK(lexer.tokens[4].value == "prazno");
+    CHECK(lexer.tokens[5].type == TokenType::Tacno);
+    CHECK(lexer.tokens[5].value == "tacno");
+    CHECK(lexer.tokens[6].type == TokenType::Netacno);
+    CHECK(lexer.tokens[6].value == "netacno");
 }
 
 TEST_CASE("Tokenizes variable declaration", "[Lexer]"){

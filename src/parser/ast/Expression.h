@@ -15,9 +15,10 @@ namespace ast {
     public:
         Expression() : Statement() {}
         virtual ~Expression() = default;
-        virtual void accept(Visitor* visitor) const{
-            visitor->visitExpression(this);
-        };
+//        virtual void accept(Visitor* visitor) const{
+//            visitor->visitExpression(this);
+//        };
+        virtual void print() override {};
     };
 }
 

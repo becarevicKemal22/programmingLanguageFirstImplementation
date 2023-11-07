@@ -11,6 +11,7 @@
 #include "Token.h"
 #include "Expression.h"
 
+typedef std::shared_ptr<ast::Expression> ExprPtr;
 
 class Parser {
 public:
@@ -31,10 +32,20 @@ private:
         current++;
         return tk;
     }
+    bool match(std::vector<TokenType> types){
+        for(auto type : types){
+            if(atType(type)){
+                return true;
+            }
+        }
+        return false;
+    }
 
     std::shared_ptr<ast::Statement> statement();
-    std::shared_ptr<ast::Expression> expression();
-    std::shared_ptr<ast::Expression> primaryExpression();
+    ExprPtr expression();
+    ExprPtr additiveExpression();
+    ExprPtr multiplicativeExpression();
+    ExprPtr primaryExpression();
 };
 
 

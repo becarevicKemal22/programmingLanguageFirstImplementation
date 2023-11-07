@@ -58,7 +58,7 @@ std::vector<Token> Lexer::tokenize(ErrorPrinter& printer) {
             if(isalpha(c)){
                 std::string identifier;
                 identifier += c;
-                while(isalnum(source[currentChar + 1]) && source[currentChar + 1] != '\0'){
+                while((isalnum(source[currentChar + 1]) || source[currentChar + 1] == '_') && source[currentChar + 1] != '\0'){
                     advance();
                     identifier += source[currentChar];
                 }
@@ -71,7 +71,7 @@ std::vector<Token> Lexer::tokenize(ErrorPrinter& printer) {
             }else{
                 std::string number;
                 number += c;
-                while((isNumericDigit(source[currentChar + 1]) || source[currentChar + 1 ] == '.') && source[currentChar + 1] != '\0'){
+                while((isNumericDigit(source[currentChar + 1]) || (source[currentChar + 1 ] == '.' && isNumericDigit(source[currentChar + 2]))) && source[currentChar + 1] != '\0'){
                     advance();
                     number += source[currentChar];
                 }

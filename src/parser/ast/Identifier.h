@@ -6,6 +6,7 @@
 #define MATURSKI_IDENTIFIER_H
 
 #include <string>
+#include <iostream>
 #include "Expression.h"
 #include "Visitor.h"
 #include "Token.h"
@@ -19,8 +20,11 @@ namespace ast{
         }
         std::string name;
         TokenPtr token;
-        void accept(Visitor* visitor) const override {
-            visitor->visitIdentifier(this);
+//        void accept(Visitor* visitor) const override {
+//            visitor->visitIdentifier(this);
+//        }
+        void print() override {
+            std::cout << name << " ";
         }
     };
 }
