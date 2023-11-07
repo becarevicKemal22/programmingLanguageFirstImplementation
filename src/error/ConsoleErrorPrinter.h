@@ -5,7 +5,7 @@
 #ifndef MATURSKI_CONSOLEERRORPRINTER_H
 #define MATURSKI_CONSOLEERRORPRINTER_H
 
-#include <ErrorPrinter.h>
+#include "ErrorPrinter.h"
 
 class ConsoleErrorPrinter : public ErrorPrinter {
 public:

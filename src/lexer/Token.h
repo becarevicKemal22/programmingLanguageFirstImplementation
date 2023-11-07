@@ -5,8 +5,8 @@
 #ifndef MATURSKI_TOKEN_H
 #define MATURSKI_TOKEN_H
 
-#include <TokenType.h>
 #include <string>
+#include "TokenType.h"
 
 class Token {
 public:

@@ -7,7 +7,7 @@
 
 #include <unordered_map>
 #include <string>
-#include <TokenType.h>
+#include "TokenType.h"
 
 const std::unordered_map<std::string, TokenType> KEYWORDS = {
         {"var", TokenType::Var},

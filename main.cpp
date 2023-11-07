@@ -1,9 +1,8 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-
-#include <Lexer.h>
-#include "ConsoleErrorPrinter.h"
+#include "./src/parser/Parser.h"
+#include "./src/error/ConsoleErrorPrinter.h"
 
 void repl(){
     std::cout << "Repl v0.1\n";
@@ -29,9 +28,9 @@ int main(int argc, char* argv[]) {
             }
             file.close();
             ConsoleErrorPrinter printer(source);
-            Lexer lexer(source);
-            lexer.tokenize(printer);
-            lexer.print();
+            Parser parser(printer);
+            ast::Program program = parser.parse(source);
+            program.printAST();
         }else{
             std::cout << "Error opening file. Check if there is a file with the selected name.\n";
         }

@@ -11,7 +11,7 @@ using std::string;
 
 bool isNumericDigit(char c);
 
-void Lexer::tokenize(ErrorPrinter& printer) {
+std::vector<Token> Lexer::tokenize(ErrorPrinter& printer) {
     while (source[currentChar] != '\0') {
         char c = source[currentChar];
         if (c == '(') {
@@ -89,6 +89,7 @@ void Lexer::tokenize(ErrorPrinter& printer) {
     }
 
     pushToken(TokenType::Eof, "");
+    return tokens;
 }
 
 void Lexer::print() const {
