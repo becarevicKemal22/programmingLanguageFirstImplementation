@@ -14,7 +14,12 @@ ast::Program Parser::parse(const std::string &source) {
     Lexer lexer(source);
     tokens = lexer.tokenize(printer);
     while(!atType(TokenType::Eof)){
-        program.body.push_back(statement());
+        try{
+            program.body.push_back(statement());
+        }catch(std::runtime_error& e) {
+            hadError = true;
+            synchronize();
+        }
     }
     return program;
 }
@@ -100,7 +105,26 @@ ExprPtr Parser::primaryExpression(){
     }
 
     else{
-        printer.printLexerError(at().line, at().charOffset, "Unexpected token found.");
-        throw std::runtime_error("Parsing error.");
+        printer.printLexerError(at().line, at().charOffset, "Expected expression.");
+        throw std::runtime_error("Parser error.");
+    }
+}
+
+void Parser::synchronize() {
+    advance();
+    while(!atType(TokenType::Eof)){
+        if(at().type == TokenType::Semicolon){
+            return;
+        }
+        switch (at().type) {
+            // Fali klasa funkcija for print i return
+            case TokenType::Var:
+            case TokenType::Konst:
+            case TokenType::Ako:
+            case TokenType::Dok:
+                return;
+            default:
+                advance();
+        }
     }
 }

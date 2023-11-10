@@ -17,7 +17,7 @@
 #include "GroupingExpression.h"
 #include "UnaryExpression.h"
 
-TEST_CASE("Correctly parses primary expressions", "[Parser]"){
+TEST_CASE("Correctly parses primary expressions", "[Parser]") {
     MockErrorPrinter printer;
     Parser parser(printer);
     const std::string source = "5.45232 ident 21 variableName2 prazno tacno netacno";
@@ -53,7 +53,7 @@ TEST_CASE("Correctly parses primary expressions", "[Parser]"){
     CHECK_FALSE(booleanLiteral->value);
 }
 
-TEST_CASE("Basic binary expression", "[Parser]"){
+TEST_CASE("Basic binary expression", "[Parser]") {
     MockErrorPrinter printer;
     Parser parser(printer);
     const std::string source = "5 + 10";
@@ -70,7 +70,7 @@ TEST_CASE("Basic binary expression", "[Parser]"){
     CHECK(right->number == 10);
 }
 
-TEST_CASE("Groups expression", "[Parser]"){
+TEST_CASE("Groups expression", "[Parser]") {
     MockErrorPrinter printer;
     Parser parser(printer);
     const std::string source = "2 * (3 - 1)";
@@ -79,34 +79,30 @@ TEST_CASE("Groups expression", "[Parser]"){
     REQUIRE(body.size() == 1);
     std::shared_ptr<ast::BinaryExpression> binExpr = std::dynamic_pointer_cast<ast::BinaryExpression>(body[0]);
     REQUIRE(binExpr);
-    std::shared_ptr<ast::GroupingExpression> groupingExpression = std::dynamic_pointer_cast<ast::GroupingExpression>(binExpr->right);
+    std::shared_ptr<ast::GroupingExpression> groupingExpression = std::dynamic_pointer_cast<ast::GroupingExpression>(
+            binExpr->right);
     REQUIRE(groupingExpression);
-    std::shared_ptr<ast::BinaryExpression> rhs = std::dynamic_pointer_cast<ast::BinaryExpression>(groupingExpression->expr);
+    std::shared_ptr<ast::BinaryExpression> rhs = std::dynamic_pointer_cast<ast::BinaryExpression>(
+            groupingExpression->expr);
     REQUIRE(rhs);
     CHECK(rhs->_operator->value == "-");
 }
 
-TEST_CASE("Handles invalid group expressions", "[Parser][GroupingExpression]"){
+TEST_CASE("Handles invalid group expressions", "[Parser][GroupingExpression]") {
     MockErrorPrinter printer;
     Parser parser(printer);
     const std::string source = "(5 + 10";
-    SECTION("Throws runtime error on invalid group expression", ""){
-        REQUIRE_THROWS_AS(parser.parse(source), std::runtime_error);
-    }
-    SECTION("Prints error to printer on invalid group expression", ""){
-        try{
-            ast::Program body = parser.parse(source);
-        }catch(std::runtime_error err){
-            REQUIRE(printer.numberOfTimesCalled == 1);
-        }
-    }
+    parser.parse(source);
+    REQUIRE(printer.numberOfTimesCalled == 1);
+    REQUIRE(parser.hadError);
+
 }
 
-TEST_CASE("Parses unary expressions", "[Parser]"){
+TEST_CASE("Parses unary expressions", "[Parser]") {
     MockErrorPrinter printer;
     Parser parser(printer);
 
-    SECTION("Parses bang unary", "[Parser]"){
+    SECTION("Parses bang unary", "[Parser]") {
         const std::string source = "!tacno";
         ast::Program program = parser.parse(source);
         std::vector<std::shared_ptr<ast::Statement>> body = program.body;
@@ -115,11 +111,11 @@ TEST_CASE("Parses unary expressions", "[Parser]"){
         std::shared_ptr<ast::UnaryExpression> unary = std::dynamic_pointer_cast<ast::UnaryExpression>(body[0]);
         REQUIRE(unary);
         CHECK(unary->_operator->value == "!");
-        std::shared_ptr<ast::BooleanLiteral> booleanLiteral = std::dynamic_pointer_cast<ast::BooleanLiteral>(unary->expr);
+        std::shared_ptr<ast::BooleanLiteral> booleanLiteral = std::dynamic_pointer_cast<ast::BooleanLiteral>(
+                unary->expr);
         REQUIRE(booleanLiteral);
         CHECK(booleanLiteral->value);
-    }
-    SECTION("Parses minus unary"){
+    }SECTION("Parses minus unary") {
         const std::string source = "-(2 + 5)";
         ast::Program program = parser.parse(source);
         std::vector<std::shared_ptr<ast::Statement>> body = program.body;
@@ -127,62 +123,66 @@ TEST_CASE("Parses unary expressions", "[Parser]"){
         std::shared_ptr<ast::UnaryExpression> unary = std::dynamic_pointer_cast<ast::UnaryExpression>(body[0]);
         REQUIRE(unary);
         CHECK(unary->_operator->value == "-");
-        std::shared_ptr<ast::GroupingExpression> groupExpr = std::dynamic_pointer_cast<ast::GroupingExpression>(unary->expr);
+        std::shared_ptr<ast::GroupingExpression> groupExpr = std::dynamic_pointer_cast<ast::GroupingExpression>(
+                unary->expr);
         REQUIRE(groupExpr);
-        std::shared_ptr<ast::BinaryExpression> binaryExpr = std::dynamic_pointer_cast<ast::BinaryExpression>(groupExpr->expr);
+        std::shared_ptr<ast::BinaryExpression> binaryExpr = std::dynamic_pointer_cast<ast::BinaryExpression>(
+                groupExpr->expr);
         REQUIRE(binaryExpr);
         CHECK(binaryExpr->_operator->value == "+");
     }
 }
 
-TEST_CASE("Parses comparison expressions", "[Parser]"){
+TEST_CASE("Parses comparison expressions", "[Parser]") {
     MockErrorPrinter printer;
     Parser parser(printer);
-    SECTION("Parses < expressions"){
+    SECTION("Parses < expressions") {
         const std::string source = "2 < 5";
         ast::Program program = parser.parse(source);
         std::vector<std::shared_ptr<ast::Statement>> body = program.body;
         REQUIRE(body.size() == 1);
-        std::shared_ptr<ast::BinaryExpression> binaryExpression = std::dynamic_pointer_cast<ast::BinaryExpression>(body[0]);
+        std::shared_ptr<ast::BinaryExpression> binaryExpression = std::dynamic_pointer_cast<ast::BinaryExpression>(
+                body[0]);
         REQUIRE(binaryExpression);
         CHECK(binaryExpression->_operator->value == "<");
-    }
-    SECTION("Parser > expressions"){
+    }SECTION("Parser > expressions") {
         const std::string source = "2 > 5";
         ast::Program program = parser.parse(source);
         std::vector<std::shared_ptr<ast::Statement>> body = program.body;
         REQUIRE(body.size() == 1);
-        std::shared_ptr<ast::BinaryExpression> binaryExpression = std::dynamic_pointer_cast<ast::BinaryExpression>(body[0]);
+        std::shared_ptr<ast::BinaryExpression> binaryExpression = std::dynamic_pointer_cast<ast::BinaryExpression>(
+                body[0]);
         REQUIRE(binaryExpression);
         CHECK(binaryExpression->_operator->value == ">");
-    }
-    SECTION("Parser <= expressions"){
+    }SECTION("Parser <= expressions") {
         const std::string source = "2 <= 5";
         ast::Program program = parser.parse(source);
         std::vector<std::shared_ptr<ast::Statement>> body = program.body;
         REQUIRE(body.size() == 1);
-        std::shared_ptr<ast::BinaryExpression> binaryExpression = std::dynamic_pointer_cast<ast::BinaryExpression>(body[0]);
+        std::shared_ptr<ast::BinaryExpression> binaryExpression = std::dynamic_pointer_cast<ast::BinaryExpression>(
+                body[0]);
         REQUIRE(binaryExpression);
         CHECK(binaryExpression->_operator->value == "<=");
-    }
-    SECTION("Parser >= expressions"){
+    }SECTION("Parser >= expressions") {
         const std::string source = "2 >= 5";
         ast::Program program = parser.parse(source);
         std::vector<std::shared_ptr<ast::Statement>> body = program.body;
         REQUIRE(body.size() == 1);
-        std::shared_ptr<ast::BinaryExpression> binaryExpression = std::dynamic_pointer_cast<ast::BinaryExpression>(body[0]);
+        std::shared_ptr<ast::BinaryExpression> binaryExpression = std::dynamic_pointer_cast<ast::BinaryExpression>(
+                body[0]);
         REQUIRE(binaryExpression);
         CHECK(binaryExpression->_operator->value == ">=");
-    }
-    SECTION("Parses chained comparison"){
+    }SECTION("Parses chained comparison") {
         const std::string source = "var1 <= var2 < var3";
         ast::Program program = parser.parse(source);
         std::vector<std::shared_ptr<ast::Statement>> body = program.body;
         REQUIRE(body.size() == 1);
-        std::shared_ptr<ast::BinaryExpression> binaryExpression = std::dynamic_pointer_cast<ast::BinaryExpression>(body[0]);
+        std::shared_ptr<ast::BinaryExpression> binaryExpression = std::dynamic_pointer_cast<ast::BinaryExpression>(
+                body[0]);
         REQUIRE(binaryExpression);
         CHECK(binaryExpression->_operator->value == "<");
-        std::shared_ptr<ast::BinaryExpression> secondBinary = std::dynamic_pointer_cast<ast::BinaryExpression>(binaryExpression->left);
+        std::shared_ptr<ast::BinaryExpression> secondBinary = std::dynamic_pointer_cast<ast::BinaryExpression>(
+                binaryExpression->left);
         REQUIRE(secondBinary);
         CHECK(secondBinary->_operator->value == "<=");
         std::shared_ptr<ast::Identifier> ident = std::dynamic_pointer_cast<ast::Identifier>(secondBinary->left);
@@ -197,48 +197,52 @@ TEST_CASE("Parses comparison expressions", "[Parser]"){
     }
 }
 
-TEST_CASE("Parses equality expressions", "[Parser]"){
+TEST_CASE("Parses equality expressions", "[Parser]") {
     MockErrorPrinter printer;
     Parser parser(printer);
-    SECTION("Parses == expressions"){
+    SECTION("Parses == expressions") {
         const std::string source = "2 == 5";
         ast::Program program = parser.parse(source);
         std::vector<std::shared_ptr<ast::Statement>> body = program.body;
         REQUIRE(body.size() == 1);
-        std::shared_ptr<ast::BinaryExpression> binaryExpression = std::dynamic_pointer_cast<ast::BinaryExpression>(body[0]);
+        std::shared_ptr<ast::BinaryExpression> binaryExpression = std::dynamic_pointer_cast<ast::BinaryExpression>(
+                body[0]);
         REQUIRE(binaryExpression);
         CHECK(binaryExpression->_operator->value == "==");
-        std::shared_ptr<ast::NumericLiteral> numLit = std::dynamic_pointer_cast<ast::NumericLiteral>(binaryExpression->left);
+        std::shared_ptr<ast::NumericLiteral> numLit = std::dynamic_pointer_cast<ast::NumericLiteral>(
+                binaryExpression->left);
         REQUIRE(numLit);
         CHECK_THAT(numLit->number, Catch::Matchers::WithinRel(2.0));
         numLit = std::dynamic_pointer_cast<ast::NumericLiteral>(binaryExpression->right);
         REQUIRE(numLit);
         CHECK_THAT(numLit->number, Catch::Matchers::WithinRel(5.0));
-    }
-    SECTION("Parses != expressions"){
+    }SECTION("Parses != expressions") {
         const std::string source = "tacno != netacno";
         ast::Program program = parser.parse(source);
         std::vector<std::shared_ptr<ast::Statement>> body = program.body;
         REQUIRE(body.size() == 1);
-        std::shared_ptr<ast::BinaryExpression> binaryExpression = std::dynamic_pointer_cast<ast::BinaryExpression>(body[0]);
+        std::shared_ptr<ast::BinaryExpression> binaryExpression = std::dynamic_pointer_cast<ast::BinaryExpression>(
+                body[0]);
         REQUIRE(binaryExpression);
         CHECK(binaryExpression->_operator->value == "!=");
-        std::shared_ptr<ast::BooleanLiteral> boolLit = std::dynamic_pointer_cast<ast::BooleanLiteral>(binaryExpression->left);
+        std::shared_ptr<ast::BooleanLiteral> boolLit = std::dynamic_pointer_cast<ast::BooleanLiteral>(
+                binaryExpression->left);
         REQUIRE(boolLit);
         CHECK(boolLit->value);
         boolLit = std::dynamic_pointer_cast<ast::BooleanLiteral>(binaryExpression->right);
         REQUIRE(boolLit);
         CHECK_FALSE(boolLit->value);
-    }
-    SECTION("Parses chained equality"){
+    }SECTION("Parses chained equality") {
         const std::string source = "var1 == var2 != var3";
         ast::Program program = parser.parse(source);
         std::vector<std::shared_ptr<ast::Statement>> body = program.body;
         REQUIRE(body.size() == 1);
-        std::shared_ptr<ast::BinaryExpression> binaryExpression = std::dynamic_pointer_cast<ast::BinaryExpression>(body[0]);
+        std::shared_ptr<ast::BinaryExpression> binaryExpression = std::dynamic_pointer_cast<ast::BinaryExpression>(
+                body[0]);
         REQUIRE(binaryExpression);
         CHECK(binaryExpression->_operator->value == "!=");
-        std::shared_ptr<ast::BinaryExpression> secondBinary = std::dynamic_pointer_cast<ast::BinaryExpression>(binaryExpression->left);
+        std::shared_ptr<ast::BinaryExpression> secondBinary = std::dynamic_pointer_cast<ast::BinaryExpression>(
+                binaryExpression->left);
         REQUIRE(secondBinary);
         CHECK(secondBinary->_operator->value == "==");
         std::shared_ptr<ast::Identifier> ident = std::dynamic_pointer_cast<ast::Identifier>(secondBinary->left);

@@ -17,6 +17,7 @@ class Parser {
 public:
     explicit Parser(ErrorPrinter& printer) : printer(printer) {}
     ast::Program parse(const std::string& source);
+    bool hadError = false;
 private:
     ErrorPrinter& printer;
     std::vector<Token> tokens = {};
@@ -52,6 +53,7 @@ private:
     ExprPtr multiplicativeExpression();
     ExprPtr unaryExpression();
     ExprPtr primaryExpression();
+    void synchronize();
 };
 
 
