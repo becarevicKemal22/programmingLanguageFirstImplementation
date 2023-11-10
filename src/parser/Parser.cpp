@@ -7,6 +7,7 @@
 #include "BooleanLiteral.h"
 #include "NullLiteral.h"
 #include "GroupingExpression.h"
+#include "UnaryExpression.h"
 
 ast::Program Parser::parse(const std::string &source) {
     ast::Program program;
@@ -23,7 +24,29 @@ std::shared_ptr<ast::Statement> Parser::statement(){
 }
 
 ExprPtr Parser::expression(){
-    return additiveExpression();
+    return equalityExpression();
+}
+
+ExprPtr Parser::equalityExpression() {
+    ExprPtr expr = comparisonExpression();
+
+    while(match({TokenType::DoubleEqual, TokenType::BangEqual})){
+        std::shared_ptr<Token> op = advance();
+        ExprPtr right = comparisonExpression();
+        expr = std::make_shared<ast::BinaryExpression>(expr, op, right);
+    }
+    return expr;
+}
+
+ExprPtr Parser::comparisonExpression() {
+    ExprPtr expr = additiveExpression();
+
+    while(match({TokenType::Greater, TokenType::GreaterEqual, TokenType::Less, TokenType::LessEqual})){
+        std::shared_ptr<Token> op = advance();
+        ExprPtr right = additiveExpression();
+        expr = std::make_shared<ast::BinaryExpression>(expr, op, right);
+    }
+    return expr;
 }
 
 ExprPtr Parser::additiveExpression() {
@@ -37,13 +60,22 @@ ExprPtr Parser::additiveExpression() {
 }
 
 ExprPtr Parser::multiplicativeExpression() {
-    ExprPtr expr = primaryExpression();
+    ExprPtr expr = unaryExpression();
     while(at().value == "*" || at().value == "/" || at().value == "%"){
         std::shared_ptr<Token> _operator = advance();
-        ExprPtr right = primaryExpression();
+        ExprPtr right = unaryExpression();
         expr = std::make_shared<ast::BinaryExpression>(expr, _operator, right);
     }
     return expr;
+}
+
+ExprPtr Parser::unaryExpression(){
+    if(at().value == "!" || at().value == "-"){
+        std::shared_ptr<Token> op = advance();
+        ExprPtr right = unaryExpression();
+        return std::make_shared<ast::UnaryExpression>(op, right);
+    }
+    return primaryExpression();
 }
 
 ExprPtr Parser::primaryExpression(){

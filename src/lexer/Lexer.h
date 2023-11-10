@@ -20,6 +20,9 @@ private:
     char at(){
         return source[currentChar];
     }
+    char peek(){
+        return source[currentChar + 1];
+    }
     void pushToken(TokenType type, std::string value){
         tokens.emplace_back(type, value, line, (charIndexOnLine + 1) - value.length());
     }

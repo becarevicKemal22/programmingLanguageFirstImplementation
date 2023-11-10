@@ -46,8 +46,11 @@ private:
 
     std::shared_ptr<ast::Statement> statement();
     ExprPtr expression();
+    ExprPtr equalityExpression();
+    ExprPtr comparisonExpression();
     ExprPtr additiveExpression();
     ExprPtr multiplicativeExpression();
+    ExprPtr unaryExpression();
     ExprPtr primaryExpression();
 };
 

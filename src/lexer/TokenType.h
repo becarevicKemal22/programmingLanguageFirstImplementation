@@ -10,7 +10,7 @@ enum class TokenType{
     OpenParen, ClosedParen, OpenBrace, ClosedBrace, OpenBracket, ClosedBracket,
     Var, Konst, Ako, Dok, Identifikator, Broj, Prazno, Tacno, Netacno,
     BinarniOperator,
-    Semicolon, Colon, Comma, Dot,
+    Semicolon, Colon, Comma, Dot, Bang, BangEqual, Less, LessEqual, Greater, GreaterEqual,
     Equal, DoubleEqual
 };
 

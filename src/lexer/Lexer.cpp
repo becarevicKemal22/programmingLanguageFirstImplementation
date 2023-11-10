@@ -36,7 +36,7 @@ std::vector<Token> Lexer::tokenize(ErrorPrinter& printer) {
             pushToken(TokenType::BinarniOperator, c);
             advance();
         } else if (c == '/') {
-            if (source[currentChar + 1] == '/') {
+            if (peek() == '/') {
                 handleComment();
             } else {
                 pushToken(TokenType::BinarniOperator, c);
@@ -54,8 +54,16 @@ std::vector<Token> Lexer::tokenize(ErrorPrinter& printer) {
         } else if (c == '.') {
             pushToken(TokenType::Dot, c);
             advance();
+        } else if(c == '!'){
+            if(peek() == '='){
+                pushToken(TokenType::BangEqual, "!=");
+                advance();
+            }else{
+                pushToken(TokenType::Bang, c);
+            }
+            advance();
         } else if (c == '=') {
-            if (source[currentChar + 1] == '=') {
+            if (peek() == '=') {
                 pushToken(TokenType::DoubleEqual, "==");
                 advance();
                 advance();
@@ -63,6 +71,22 @@ std::vector<Token> Lexer::tokenize(ErrorPrinter& printer) {
                 pushToken(TokenType::Equal, "=");
                 advance();
             }
+        } else if(c == '<'){
+            if(peek() == '='){
+                pushToken(TokenType::LessEqual, "<=");
+                advance();
+            }else{
+                pushToken(TokenType::Less, "<");
+            }
+            advance();
+        } else if(c == '>'){
+            if(peek() == '='){
+                pushToken(TokenType::GreaterEqual, ">=");
+                advance();
+            }else{
+                pushToken(TokenType::Greater, ">");
+            }
+            advance();
         } else if (c == '\n' || c == '\r') {
             newLine();
         } else if (c == ' ') {
@@ -74,7 +98,7 @@ std::vector<Token> Lexer::tokenize(ErrorPrinter& printer) {
             if(isalpha(c)){
                 std::string identifier;
                 identifier += c;
-                while((isalnum(source[currentChar + 1]) || source[currentChar + 1] == '_') && source[currentChar + 1] != '\0'){
+                while((isalnum(peek()) || peek() == '_') && peek() != '\0'){
                     advance();
                     identifier += source[currentChar];
                 }
@@ -88,7 +112,7 @@ std::vector<Token> Lexer::tokenize(ErrorPrinter& printer) {
             }else{
                 std::string number;
                 number += c;
-                while((isNumericDigit(source[currentChar + 1]) || (source[currentChar + 1 ] == '.' && isNumericDigit(source[currentChar + 2]))) && source[currentChar + 1] != '\0'){
+                while((isNumericDigit(peek()) || (peek() == '.' && isNumericDigit(source[currentChar + 2]))) && peek() != '\0'){
                     advance();
                     number += source[currentChar];
                 }

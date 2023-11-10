@@ -9,32 +9,44 @@
 
 #include <iostream>
 
-TEST_CASE("Returns correct token", "[Lexer]"){
-    std::string source = "(){}[]+-*/;:.,= ==";
+void checkTypeAndContent(const Lexer &lexer, int index, TokenType type, std::string content) {
+    CHECK(lexer.tokens[index].type == type);
+    CHECK(lexer.tokens[index].value == content);
+}
+
+TEST_CASE("Returns correct token", "[Lexer]") {
+    std::string source = "(){}[]+-*/;:.,= ==!!= < <= > >=";
     MockErrorPrinter printer;
     Lexer lexer(source);
     lexer.tokenize(printer);
-    CHECK(lexer.tokens.size() == 17);
-    CHECK(lexer.tokens[0].type == TokenType::OpenParen);
-    CHECK(lexer.tokens[1].type == TokenType::ClosedParen);
-    CHECK(lexer.tokens[2].type == TokenType::OpenBrace);
-    CHECK(lexer.tokens[3].type == TokenType::ClosedBrace);
-    CHECK(lexer.tokens[4].type == TokenType::OpenBracket);
-    CHECK(lexer.tokens[5].type == TokenType::ClosedBracket);
-    CHECK(lexer.tokens[6].type == TokenType::BinarniOperator);
-    CHECK(lexer.tokens[7].type == TokenType::BinarniOperator);
-    CHECK(lexer.tokens[8].type == TokenType::BinarniOperator);
-    CHECK(lexer.tokens[9].type == TokenType::BinarniOperator);
-    CHECK(lexer.tokens[10].type == TokenType::Semicolon);
-    CHECK(lexer.tokens[11].type == TokenType::Colon);
-    CHECK(lexer.tokens[12].type == TokenType::Dot);
-    CHECK(lexer.tokens[13].type == TokenType::Comma);
-    CHECK(lexer.tokens[14].type == TokenType::Equal);
-    CHECK(lexer.tokens[15].type == TokenType::DoubleEqual);
-    CHECK(lexer.tokens[16].type == TokenType::Eof);
+    CHECK(lexer.tokens.size() == 23);
+
+    checkTypeAndContent(lexer, 0, TokenType::OpenParen, "(");
+    checkTypeAndContent(lexer, 1, TokenType::ClosedParen, ")");
+    checkTypeAndContent(lexer, 2, TokenType::OpenBrace, "{");
+    checkTypeAndContent(lexer, 3, TokenType::ClosedBrace, "}");
+    checkTypeAndContent(lexer, 4, TokenType::OpenBracket, "[");
+    checkTypeAndContent(lexer, 5, TokenType::ClosedBracket, "]");
+    checkTypeAndContent(lexer, 6, TokenType::BinarniOperator, "+");
+    checkTypeAndContent(lexer, 7, TokenType::BinarniOperator, "-");
+    checkTypeAndContent(lexer, 8, TokenType::BinarniOperator, "*");
+    checkTypeAndContent(lexer, 9, TokenType::BinarniOperator, "/");
+    checkTypeAndContent(lexer, 10, TokenType::Semicolon, ";");
+    checkTypeAndContent(lexer, 11, TokenType::Colon, ":");
+    checkTypeAndContent(lexer, 12, TokenType::Dot, ".");
+    checkTypeAndContent(lexer, 13, TokenType::Comma, ",");
+    checkTypeAndContent(lexer, 14, TokenType::Equal, "=");
+    checkTypeAndContent(lexer, 15, TokenType::DoubleEqual, "==");
+    checkTypeAndContent(lexer, 16, TokenType::Bang, "!");
+    checkTypeAndContent(lexer, 17, TokenType::BangEqual, "!=");
+    checkTypeAndContent(lexer, 18, TokenType::Less, "<");
+    checkTypeAndContent(lexer, 19, TokenType::LessEqual, "<=");
+    checkTypeAndContent(lexer, 20, TokenType::Greater, ">");
+    checkTypeAndContent(lexer, 21, TokenType::GreaterEqual, ">=");
+    checkTypeAndContent(lexer, 22, TokenType::Eof, "");
 }
 
-TEST_CASE("Ignores commments", "[Lexer]"){
+TEST_CASE("Ignores commments", "[Lexer]") {
     std::string source = "{} // Comment \n [";
     MockErrorPrinter printer;
     Lexer lexer(source);
@@ -44,7 +56,7 @@ TEST_CASE("Ignores commments", "[Lexer]"){
     REQUIRE(lexer.tokens[2].type == TokenType::OpenBracket);
 }
 
-TEST_CASE("Numbers lines and offsets correctly", "[Lexer]"){
+TEST_CASE("Numbers lines and offsets correctly", "[Lexer]") {
     std::string source = "{ {\n    {\n\t{";
     MockErrorPrinter printer;
     Lexer lexer(source);
@@ -64,7 +76,7 @@ TEST_CASE("Numbers lines and offsets correctly", "[Lexer]"){
     CHECK(lexer.tokens[3].charOffset == 4);
 }
 
-TEST_CASE("Throws and outputs error on unrecognized token", "[Lexer]"){
+TEST_CASE("Throws and outputs error on unrecognized token", "[Lexer]") {
     std::string source = "`";
     MockErrorPrinter printer;
     Lexer lexer(source);
@@ -73,193 +85,155 @@ TEST_CASE("Throws and outputs error on unrecognized token", "[Lexer]"){
     REQUIRE(printer.numberOfTimesCalled == 1);
 }
 
-TEST_CASE("Correctly interprets numbers", "[Lexer]"){
+TEST_CASE("Correctly interprets numbers", "[Lexer]") {
     std::string source = "3.25 5";
     MockErrorPrinter printer;
     Lexer lexer(source);
-    try{
+    try {
         lexer.tokenize(printer);
-    }catch(std::runtime_error& err){
+    } catch (std::runtime_error &err) {
         std::cout << err.what() << "\n";
     }
 
     REQUIRE(lexer.tokens.size() == 3);
-    REQUIRE(lexer.tokens[0].type == TokenType::Broj);
-    REQUIRE(lexer.tokens[0].value == "3.25");
-    REQUIRE(lexer.tokens[1].type == TokenType::Broj);
-    REQUIRE(lexer.tokens[1].value == "5");
+    checkTypeAndContent(lexer, 0, TokenType::Broj, "3.25");
+    checkTypeAndContent(lexer, 1, TokenType::Broj, "5");
 }
 
-TEST_CASE("Correctly tokenizes number and dot edge case", "[Lexer]"){
+TEST_CASE("Correctly tokenizes number and dot edge case", "[Lexer]") {
     std::string source = "12.3 45.";
     MockErrorPrinter printer;
     Lexer lexer(source);
-    try{
+    try {
         lexer.tokenize(printer);
-    }catch(std::runtime_error& err){
+    } catch (std::runtime_error &err) {
         std::cout << err.what() << "\n";
     }
 
     REQUIRE(lexer.tokens.size() == 4);
-    REQUIRE(lexer.tokens[0].type == TokenType::Broj);
-    REQUIRE(lexer.tokens[0].value == "12.3");
-    REQUIRE(lexer.tokens[1].type == TokenType::Broj);
-    REQUIRE(lexer.tokens[1].value == "45");
-    REQUIRE(lexer.tokens[2].type == TokenType::Dot);
-    REQUIRE(lexer.tokens[2].value == ".");
+    checkTypeAndContent(lexer, 0, TokenType::Broj, "12.3");
+    checkTypeAndContent(lexer, 1, TokenType::Broj, "45");
+    checkTypeAndContent(lexer, 2, TokenType::Dot, ".");
 }
 
-TEST_CASE("Correctly tokenizes identifiers", "[Lexer]"){
+TEST_CASE("Correctly tokenizes identifiers", "[Lexer]") {
     std::string source = "varijabla var2";
     MockErrorPrinter printer;
     Lexer lexer(source);
-    try{
+    try {
         lexer.tokenize(printer);
-    }catch(std::runtime_error& err){
+    } catch (std::runtime_error &err) {
         std::cout << err.what() << "\n";
     }
 
     REQUIRE(lexer.tokens.size() == 3);
-    CHECK(lexer.tokens[0].type == TokenType::Identifikator);
-    CHECK(lexer.tokens[0].value == "varijabla");
-    CHECK(lexer.tokens[1].type == TokenType::Identifikator);
-    CHECK(lexer.tokens[1].value == "var2");
+    checkTypeAndContent(lexer, 0, TokenType::Identifikator, "varijabla");
+    checkTypeAndContent(lexer, 1, TokenType::Identifikator, "var2");
 }
 
-TEST_CASE("Correctly tokenizes keywords", "[Lexer]"){
+TEST_CASE("Correctly tokenizes keywords", "[Lexer]") {
     std::string source = "var konst ako dok prazno tacno netacno";
     MockErrorPrinter printer;
     Lexer lexer(source);
-    try{
+    try {
         lexer.tokenize(printer);
-    }catch(std::runtime_error& err){
+    } catch (std::runtime_error &err) {
         std::cout << err.what() << "\n";
     }
 
     REQUIRE(lexer.tokens.size() == 8);
-    CHECK(lexer.tokens[0].type == TokenType::Var);
-    CHECK(lexer.tokens[0].value == "var");
-    CHECK(lexer.tokens[1].type == TokenType::Konst);
-    CHECK(lexer.tokens[1].value == "konst");
-    CHECK(lexer.tokens[2].type == TokenType::Ako);
-    CHECK(lexer.tokens[2].value == "ako");
-    CHECK(lexer.tokens[3].type == TokenType::Dok);
-    CHECK(lexer.tokens[3].value == "dok");
-    CHECK(lexer.tokens[4].type == TokenType::Prazno);
-    CHECK(lexer.tokens[4].value == "prazno");
-    CHECK(lexer.tokens[5].type == TokenType::Tacno);
-    CHECK(lexer.tokens[5].value == "tacno");
-    CHECK(lexer.tokens[6].type == TokenType::Netacno);
-    CHECK(lexer.tokens[6].value == "netacno");
+    checkTypeAndContent(lexer, 0, TokenType::Var, "var");
+    checkTypeAndContent(lexer, 1, TokenType::Konst, "konst");
+    checkTypeAndContent(lexer, 2, TokenType::Ako, "ako");
+    checkTypeAndContent(lexer, 3, TokenType::Dok, "dok");
+    checkTypeAndContent(lexer, 4, TokenType::Prazno, "prazno");
+    checkTypeAndContent(lexer, 5, TokenType::Tacno, "tacno");
+    checkTypeAndContent(lexer, 6, TokenType::Netacno, "netacno");
 }
 
-TEST_CASE("Tokenizes variable declaration", "[Lexer]"){
+TEST_CASE("Tokenizes variable declaration", "[Lexer]") {
     std::string source = "var var2 = 5.36;";
     MockErrorPrinter printer;
     Lexer lexer(source);
-    try{
+    try {
         lexer.tokenize(printer);
-    }catch(std::runtime_error& err){
+    } catch (std::runtime_error &err) {
         std::cout << err.what() << "\n";
     }
 
     REQUIRE(lexer.tokens.size() == 6);
-    CHECK(lexer.tokens[0].type == TokenType::Var);
-    CHECK(lexer.tokens[0].value == "var");
-    CHECK(lexer.tokens[1].type == TokenType::Identifikator);
-    CHECK(lexer.tokens[1].value == "var2");
-    CHECK(lexer.tokens[2].type == TokenType::Equal);
-    CHECK(lexer.tokens[2].value == "=");
-    CHECK(lexer.tokens[3].type == TokenType::Broj);
-    CHECK(lexer.tokens[3].value == "5.36");
-    CHECK(lexer.tokens[4].type == TokenType::Semicolon);
-    CHECK(lexer.tokens[4].value == ";");
+    checkTypeAndContent(lexer, 0, TokenType::Var, "var");
+    checkTypeAndContent(lexer, 1, TokenType::Identifikator, "var2");
+    checkTypeAndContent(lexer, 2, TokenType::Equal, "=");
+    checkTypeAndContent(lexer, 3, TokenType::Broj, "5.36");
+    checkTypeAndContent(lexer, 4, TokenType::Semicolon, ";");
 }
 
-TEST_CASE("Program sample", "[Lexer]"){
+TEST_CASE("Program sample", "[Lexer]") {
     std::string source = "var a = 5;\n"
                          "ako(a == 5){\n"
                          "    a = 10;\n"
                          "}";
     MockErrorPrinter printer;
     Lexer lexer(source);
-    try{
+    try {
         lexer.tokenize(printer);
-    }catch(std::runtime_error& err){
+    } catch (std::runtime_error &err) {
         std::cout << err.what() << "\n";
     }
 
     REQUIRE(lexer.tokens.size() == 18);
-    CHECK(lexer.tokens[0].type == TokenType::Var);
-    CHECK(lexer.tokens[0].value == "var");
-    CHECK(lexer.tokens[1].type == TokenType::Identifikator);
-    CHECK(lexer.tokens[1].value == "a");
-    CHECK(lexer.tokens[2].type == TokenType::Equal);
-    CHECK(lexer.tokens[2].value == "=");
-    CHECK(lexer.tokens[3].type == TokenType::Broj);
-    CHECK(lexer.tokens[3].value == "5");
-    CHECK(lexer.tokens[4].type == TokenType::Semicolon);
-    CHECK(lexer.tokens[4].value == ";");
-    CHECK(lexer.tokens[5].type == TokenType::Ako);
-    CHECK(lexer.tokens[5].value == "ako");
-    CHECK(lexer.tokens[6].type == TokenType::OpenParen);
-    CHECK(lexer.tokens[6].value == "(");
-    CHECK(lexer.tokens[7].type == TokenType::Identifikator);
-    CHECK(lexer.tokens[7].value == "a");
-    CHECK(lexer.tokens[8].type == TokenType::DoubleEqual);
-    CHECK(lexer.tokens[8].value == "==");
-    CHECK(lexer.tokens[9].type == TokenType::Broj);
-    CHECK(lexer.tokens[9].value == "5");
-    CHECK(lexer.tokens[10].type == TokenType::ClosedParen);
-    CHECK(lexer.tokens[10].value == ")");
-    CHECK(lexer.tokens[11].type == TokenType::OpenBrace);
-    CHECK(lexer.tokens[11].value == "{");
-    CHECK(lexer.tokens[12].type == TokenType::Identifikator);
-    CHECK(lexer.tokens[12].value == "a");
-    CHECK(lexer.tokens[13].type == TokenType::Equal);
-    CHECK(lexer.tokens[13].value == "=");
-    CHECK(lexer.tokens[14].type == TokenType::Broj);
-    CHECK(lexer.tokens[14].value == "10");
-    CHECK(lexer.tokens[15].type == TokenType::Semicolon);
-    CHECK(lexer.tokens[15].value == ";");
-    CHECK(lexer.tokens[16].type == TokenType::ClosedBrace);
-    CHECK(lexer.tokens[16].value == "}");
+    checkTypeAndContent(lexer, 0, TokenType::Var, "var");
+    checkTypeAndContent(lexer, 1, TokenType::Identifikator, "a");
+    checkTypeAndContent(lexer, 2, TokenType::Equal, "=");
+    checkTypeAndContent(lexer, 3, TokenType::Broj, "5");
+    checkTypeAndContent(lexer, 4, TokenType::Semicolon, ";");
+    checkTypeAndContent(lexer, 5, TokenType::Ako, "ako");
+    checkTypeAndContent(lexer, 6, TokenType::OpenParen, "(");
+    checkTypeAndContent(lexer, 7, TokenType::Identifikator, "a");
+    checkTypeAndContent(lexer, 8, TokenType::DoubleEqual, "==");
+    checkTypeAndContent(lexer, 9, TokenType::Broj, "5");
+    checkTypeAndContent(lexer, 10, TokenType::ClosedParen, ")");
+    checkTypeAndContent(lexer, 11, TokenType::OpenBrace, "{");
+    checkTypeAndContent(lexer, 12, TokenType::Identifikator, "a");
+    checkTypeAndContent(lexer, 13, TokenType::Equal, "=");
+    checkTypeAndContent(lexer, 14, TokenType::Broj, "10");
+    checkTypeAndContent(lexer, 15, TokenType::Semicolon, ";");
+    checkTypeAndContent(lexer, 16, TokenType::ClosedBrace, "}");
     CHECK(lexer.tokens[17].type == TokenType::Eof);
+
 }
 
-TEST_CASE("Correctly handles files starting with newlines", "[Lexer]"){
+TEST_CASE("Correctly handles files starting with newlines", "[Lexer]") {
     std::string source = "\n"
                          "\n"
                          "test 123;";
     MockErrorPrinter printer;
     Lexer lexer(source);
-    try{
+    try {
         lexer.tokenize(printer);
-    }catch(std::runtime_error& err){
+    } catch (std::runtime_error &err) {
         std::cout << err.what() << "\n";
     }
 
     REQUIRE(lexer.tokens.size() == 4);
-    CHECK(lexer.tokens[0].type == TokenType::Identifikator);
-    CHECK(lexer.tokens[0].value == "test");
+    checkTypeAndContent(lexer, 0, TokenType::Identifikator, "test");
     CHECK(lexer.tokens[0].charOffset == 0);
-    CHECK(lexer.tokens[1].type == TokenType::Broj);
-    CHECK(lexer.tokens[1].value == "123");
+    checkTypeAndContent(lexer, 1, TokenType::Broj, "123");
     CHECK(lexer.tokens[1].charOffset == 5);
 }
 
-TEST_CASE("Handles tab characters with offsets", "[Lexer]"){
+TEST_CASE("Handles tab characters with offsets", "[Lexer]") {
     std::string source = "\ttest";
     MockErrorPrinter printer;
     Lexer lexer(source);
-    try{
+    try {
         lexer.tokenize(printer);
-    }catch(std::runtime_error& err){
+    } catch (std::runtime_error &err) {
         std::cout << err.what() << "\n";
     }
 
     REQUIRE(lexer.tokens.size() == 2);
-    CHECK(lexer.tokens[0].type == TokenType::Identifikator);
-    CHECK(lexer.tokens[0].value == "test");
+    checkTypeAndContent(lexer, 0, TokenType::Identifikator, "test");
     CHECK(lexer.tokens[0].charOffset == 4);
 }
