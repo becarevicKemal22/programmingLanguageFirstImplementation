@@ -11,7 +11,8 @@ class MockErrorPrinter : public ErrorPrinter{
 public:
     MockErrorPrinter() : ErrorPrinter("") {}
     ~MockErrorPrinter() override = default;
-    void printError(unsigned int line, unsigned int offset, std::string message) override;
+    void printLexerError(unsigned int line, unsigned int offset, std::string message) override;
+    void expectedXBeforeY(Token previousToken, std::string expectedWhat, Token afterToken, std::string beforeWhat) override;
     unsigned int numberOfTimesCalled = 0; // For testing purposes
 };
 

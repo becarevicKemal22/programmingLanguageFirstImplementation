@@ -24,6 +24,9 @@ private:
     Token at(){
         return tokens[current];
     }
+    Token previous(){
+        return tokens[current - 1];
+    }
     bool atType(TokenType type){
         return tokens[current].type == type;
     }

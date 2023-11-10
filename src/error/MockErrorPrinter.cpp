@@ -4,6 +4,10 @@
 
 #include "MockErrorPrinter.h"
 
-void MockErrorPrinter::printError(unsigned int line, unsigned int offset, std::string message) {
+void MockErrorPrinter::printLexerError(unsigned int line, unsigned int offset, std::string message) {
+    numberOfTimesCalled++;
+}
+
+void MockErrorPrinter::expectedXBeforeY(Token previousToken, std::string expectedWhat, Token afterToken, std::string beforeWhat){
     numberOfTimesCalled++;
 }

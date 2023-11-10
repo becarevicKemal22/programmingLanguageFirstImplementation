@@ -7,14 +7,16 @@
 
 #include <string>
 #include <vector>
+#include "Token.h"
 
 class ErrorPrinter {
 public:
     explicit ErrorPrinter(const std::string& source);
     virtual ~ErrorPrinter() = default;
-    virtual void printError(unsigned int line, unsigned int offset, std::string message) = 0;
+    virtual void printLexerError(unsigned int line, unsigned int offset, std::string message) = 0;
+    virtual void expectedXBeforeY(Token previousToken, std::string expectedWhat, Token afterToken, std::string beforeWhat) = 0;
 protected:
-    std::vector<std::string> lines;
+    std::vector<std::string> lines = {};
     void extractLines(const std::string& source);
 };
 

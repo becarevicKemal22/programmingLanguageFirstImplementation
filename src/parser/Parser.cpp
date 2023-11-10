@@ -6,6 +6,7 @@
 #include "Lexer.h"
 #include "BooleanLiteral.h"
 #include "NullLiteral.h"
+#include "GroupingExpression.h"
 
 ast::Program Parser::parse(const std::string &source) {
     ast::Program program;
@@ -54,10 +55,20 @@ ExprPtr Parser::primaryExpression(){
         return std::make_shared<ast::NullLiteral>(advance());
     }else if(atType(TokenType::Tacno) || atType(TokenType::Netacno)){
         return std::make_shared<ast::BooleanLiteral>(advance());
+    }else if(atType(TokenType::OpenParen)){
+        advance();
+        std::shared_ptr<ast::GroupingExpression> expr = std::make_shared<ast::GroupingExpression>(expression());
+        if(!atType(TokenType::ClosedParen)){
+            printer.expectedXBeforeY(previous(), ")", at(), at().value);
+            throw std::runtime_error("Parser error.");
+        }else{
+            advance();
+        }
+        return expr;
     }
 
     else{
-        printer.printError(at().line, at().charOffset, "Unexpected token found.");
+        printer.printLexerError(at().line, at().charOffset, "Unexpected token found.");
         throw std::runtime_error("Parsing error.");
     }
 }

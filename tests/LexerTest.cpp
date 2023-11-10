@@ -39,6 +39,7 @@ TEST_CASE("Ignores commments", "[Lexer]"){
     MockErrorPrinter printer;
     Lexer lexer(source);
     lexer.tokenize(printer);
+
     REQUIRE(lexer.tokens.size() == 4);
     REQUIRE(lexer.tokens[2].type == TokenType::OpenBracket);
 }
@@ -48,6 +49,7 @@ TEST_CASE("Numbers lines and offsets correctly", "[Lexer]"){
     MockErrorPrinter printer;
     Lexer lexer(source);
     lexer.tokenize(printer);
+
     REQUIRE(lexer.tokens.size() == 5);
     CHECK(lexer.tokens[0].line == 1);
     CHECK(lexer.tokens[0].charOffset == 0);
@@ -56,16 +58,17 @@ TEST_CASE("Numbers lines and offsets correctly", "[Lexer]"){
     CHECK(lexer.tokens[1].charOffset == 2);
 
     CHECK(lexer.tokens[2].line == 2);
-    CHECK(lexer.tokens[2].charOffset == 5);
+    CHECK(lexer.tokens[2].charOffset == 4);
 
     CHECK(lexer.tokens[3].line == 3);
-    CHECK(lexer.tokens[3].charOffset == 5);
+    CHECK(lexer.tokens[3].charOffset == 4);
 }
 
 TEST_CASE("Throws and outputs error on unrecognized token", "[Lexer]"){
     std::string source = "`";
     MockErrorPrinter printer;
     Lexer lexer(source);
+
     REQUIRE_THROWS(lexer.tokenize(printer));
     REQUIRE(printer.numberOfTimesCalled == 1);
 }
@@ -79,6 +82,7 @@ TEST_CASE("Correctly interprets numbers", "[Lexer]"){
     }catch(std::runtime_error& err){
         std::cout << err.what() << "\n";
     }
+
     REQUIRE(lexer.tokens.size() == 3);
     REQUIRE(lexer.tokens[0].type == TokenType::Broj);
     REQUIRE(lexer.tokens[0].value == "3.25");
@@ -95,6 +99,7 @@ TEST_CASE("Correctly tokenizes number and dot edge case", "[Lexer]"){
     }catch(std::runtime_error& err){
         std::cout << err.what() << "\n";
     }
+
     REQUIRE(lexer.tokens.size() == 4);
     REQUIRE(lexer.tokens[0].type == TokenType::Broj);
     REQUIRE(lexer.tokens[0].value == "12.3");
@@ -113,6 +118,7 @@ TEST_CASE("Correctly tokenizes identifiers", "[Lexer]"){
     }catch(std::runtime_error& err){
         std::cout << err.what() << "\n";
     }
+
     REQUIRE(lexer.tokens.size() == 3);
     CHECK(lexer.tokens[0].type == TokenType::Identifikator);
     CHECK(lexer.tokens[0].value == "varijabla");
@@ -129,6 +135,7 @@ TEST_CASE("Correctly tokenizes keywords", "[Lexer]"){
     }catch(std::runtime_error& err){
         std::cout << err.what() << "\n";
     }
+
     REQUIRE(lexer.tokens.size() == 8);
     CHECK(lexer.tokens[0].type == TokenType::Var);
     CHECK(lexer.tokens[0].value == "var");
@@ -155,6 +162,7 @@ TEST_CASE("Tokenizes variable declaration", "[Lexer]"){
     }catch(std::runtime_error& err){
         std::cout << err.what() << "\n";
     }
+
     REQUIRE(lexer.tokens.size() == 6);
     CHECK(lexer.tokens[0].type == TokenType::Var);
     CHECK(lexer.tokens[0].value == "var");
@@ -180,6 +188,7 @@ TEST_CASE("Program sample", "[Lexer]"){
     }catch(std::runtime_error& err){
         std::cout << err.what() << "\n";
     }
+
     REQUIRE(lexer.tokens.size() == 18);
     CHECK(lexer.tokens[0].type == TokenType::Var);
     CHECK(lexer.tokens[0].value == "var");
@@ -216,4 +225,41 @@ TEST_CASE("Program sample", "[Lexer]"){
     CHECK(lexer.tokens[16].type == TokenType::ClosedBrace);
     CHECK(lexer.tokens[16].value == "}");
     CHECK(lexer.tokens[17].type == TokenType::Eof);
+}
+
+TEST_CASE("Correctly handles files starting with newlines", "[Lexer]"){
+    std::string source = "\n"
+                         "\n"
+                         "test 123;";
+    MockErrorPrinter printer;
+    Lexer lexer(source);
+    try{
+        lexer.tokenize(printer);
+    }catch(std::runtime_error& err){
+        std::cout << err.what() << "\n";
+    }
+
+    REQUIRE(lexer.tokens.size() == 4);
+    CHECK(lexer.tokens[0].type == TokenType::Identifikator);
+    CHECK(lexer.tokens[0].value == "test");
+    CHECK(lexer.tokens[0].charOffset == 0);
+    CHECK(lexer.tokens[1].type == TokenType::Broj);
+    CHECK(lexer.tokens[1].value == "123");
+    CHECK(lexer.tokens[1].charOffset == 5);
+}
+
+TEST_CASE("Handles tab characters with offsets", "[Lexer]"){
+    std::string source = "\ttest";
+    MockErrorPrinter printer;
+    Lexer lexer(source);
+    try{
+        lexer.tokenize(printer);
+    }catch(std::runtime_error& err){
+        std::cout << err.what() << "\n";
+    }
+
+    REQUIRE(lexer.tokens.size() == 2);
+    CHECK(lexer.tokens[0].type == TokenType::Identifikator);
+    CHECK(lexer.tokens[0].value == "test");
+    CHECK(lexer.tokens[0].charOffset == 4);
 }

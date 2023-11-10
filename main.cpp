@@ -3,6 +3,7 @@
 #include <string>
 #include "./src/parser/Parser.h"
 #include "./src/error/ConsoleErrorPrinter.h"
+#include <chrono>
 
 void repl(){
     std::cout << "Repl v0.1\n";
@@ -14,28 +15,40 @@ void repl(){
     }
 }
 
-int main(int argc, char* argv[]) {
-    if(argc == 1){
+int main(int argc, char* argv[]){
+    if (argc == 1) {
         repl();
-    }else if(argc == 2){
+    } else if (argc == 2) {
         std::ifstream file(argv[1]);
-        std::string source = "";
-        if(file.is_open()){
+        std::string source;
+//        (10 + 5myVar;
+        if (file.is_open()) {
             std::string line;
-            while(std::getline(file, line)){
+            while (std::getline(file, line)) {
                 line += '\n';
                 source += line;
             }
             file.close();
             ConsoleErrorPrinter printer(source);
             Parser parser(printer);
-            ast::Program program = parser.parse(source);
+            ast::Program program;
+//            auto start = std::chrono::high_resolution_clock::now();
+            try {
+                program = parser.parse(source);
+            } catch (std::runtime_error &err) {
+                exit(1);
+            }
+//            auto end = std::chrono::high_resolution_clock::now();
+//            std::chrono::duration<double> duration = end - start;
+//            double duration_seconds = duration.count();
+//            std::cout << "Elapsed time: " << duration_seconds << " seconds" << std::endl;
             program.printAST();
-        }else{
+        } else {
             std::cout << "Error opening file. Check if there is a file with the selected name.\n";
         }
-    }else{
+    } else {
         std::cout << "Usage: main.exe programName.prog\n";
     }
+
     return 0;
 }
