@@ -7,6 +7,8 @@
 
 #include <iostream>
 #include "Expression.h"
+#include "Interpreter.h"
+#include "RuntimeValue.h"
 
 namespace ast{
     class GroupingExpression : public Expression {
@@ -18,6 +20,9 @@ namespace ast{
             expr->print();
             std::cout << ") ";
         }
+        RuntimeValuePtr accept(Interpreter* visitor) const override {
+            return visitor->visitGroupingExpression(this);
+        };
     };
 }
 

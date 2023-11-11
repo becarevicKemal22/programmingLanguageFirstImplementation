@@ -9,7 +9,8 @@
 #include "Statement.h"
 #include "Expression.h"
 #include "Token.h"
-#include "Visitor.h"
+#include "Interpreter.h"
+#include "RuntimeValue.h"
 
 namespace ast {
     typedef std::shared_ptr<Expression> ExprPtr;
@@ -22,9 +23,9 @@ namespace ast {
         ExprPtr left;
         ExprPtr right;
         TokenPtr _operator;
-//        void accept(Visitor* visitor) const override {
-//            visitor->visitBinaryExpression(this);
-//        }
+        RuntimeValuePtr accept(Interpreter* visitor) const override {
+            return visitor->visitBinaryExpression(this);
+        }
         void print() override {
             std::cout << "( " << _operator->value << " ";
             left->print();

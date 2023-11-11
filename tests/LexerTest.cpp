@@ -15,11 +15,11 @@ void checkTypeAndContent(const Lexer &lexer, int index, TokenType type, std::str
 }
 
 TEST_CASE("Returns correct token", "[Lexer]") {
-    std::string source = "(){}[]+-*/;:.,= ==!!= < <= > >=";
+    std::string source = "(){}[]+-*/;:.,= ==!!= < <= > >=%";
     MockErrorPrinter printer;
     Lexer lexer(source);
     lexer.tokenize(printer);
-    CHECK(lexer.tokens.size() == 23);
+    CHECK(lexer.tokens.size() == 24);
 
     checkTypeAndContent(lexer, 0, TokenType::OpenParen, "(");
     checkTypeAndContent(lexer, 1, TokenType::ClosedParen, ")");
@@ -27,10 +27,10 @@ TEST_CASE("Returns correct token", "[Lexer]") {
     checkTypeAndContent(lexer, 3, TokenType::ClosedBrace, "}");
     checkTypeAndContent(lexer, 4, TokenType::OpenBracket, "[");
     checkTypeAndContent(lexer, 5, TokenType::ClosedBracket, "]");
-    checkTypeAndContent(lexer, 6, TokenType::BinarniOperator, "+");
-    checkTypeAndContent(lexer, 7, TokenType::BinarniOperator, "-");
-    checkTypeAndContent(lexer, 8, TokenType::BinarniOperator, "*");
-    checkTypeAndContent(lexer, 9, TokenType::BinarniOperator, "/");
+    checkTypeAndContent(lexer, 6, TokenType::Plus, "+");
+    checkTypeAndContent(lexer, 7, TokenType::Minus, "-");
+    checkTypeAndContent(lexer, 8, TokenType::Star, "*");
+    checkTypeAndContent(lexer, 9, TokenType::Slash, "/");
     checkTypeAndContent(lexer, 10, TokenType::Semicolon, ";");
     checkTypeAndContent(lexer, 11, TokenType::Colon, ":");
     checkTypeAndContent(lexer, 12, TokenType::Dot, ".");
@@ -43,7 +43,8 @@ TEST_CASE("Returns correct token", "[Lexer]") {
     checkTypeAndContent(lexer, 19, TokenType::LessEqual, "<=");
     checkTypeAndContent(lexer, 20, TokenType::Greater, ">");
     checkTypeAndContent(lexer, 21, TokenType::GreaterEqual, ">=");
-    checkTypeAndContent(lexer, 22, TokenType::Eof, "");
+    checkTypeAndContent(lexer, 22, TokenType::Percent, "%");
+    checkTypeAndContent(lexer, 23, TokenType::Eof, "");
 }
 
 TEST_CASE("Ignores commments", "[Lexer]") {

@@ -32,14 +32,23 @@ std::vector<Token> Lexer::tokenize(ErrorPrinter& printer) {
         } else if (c == ']') {
             pushToken(TokenType::ClosedBracket, c);
             advance();
-        } else if (c == '+' || c == '-' || c == '*' || c == '%') {
-            pushToken(TokenType::BinarniOperator, c);
+        } else if (c == '+') {
+            pushToken(TokenType::Plus, c);
+            advance();
+        } else if(c == '-'){
+            pushToken(TokenType::Minus, c);
+            advance();
+        } else if(c == '*'){
+            pushToken(TokenType::Star, c);
+            advance();
+        } else if(c == '%'){
+            pushToken(TokenType::Percent, c);
             advance();
         } else if (c == '/') {
             if (peek() == '/') {
                 handleComment();
             } else {
-                pushToken(TokenType::BinarniOperator, c);
+                pushToken(TokenType::Slash, c);
                 advance();
             }
         } else if (c == ';') {

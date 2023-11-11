@@ -7,6 +7,8 @@
 
 #include <iostream>
 #include "Expression.h"
+#include "RuntimeValue.h"
+#include "Interpreter.h"
 
 namespace ast{
     class NullLiteral : public Expression {
@@ -16,6 +18,9 @@ namespace ast{
         void print() override {
             std::cout << "prazno ";
         }
+        RuntimeValuePtr accept(Interpreter* visitor) const override {
+            return visitor->visitNullLiteral(this);
+        };
     };
 }
 

@@ -15,6 +15,8 @@ public:
     virtual ~ErrorPrinter() = default;
     virtual void printLexerError(unsigned int line, unsigned int offset, std::string message) = 0;
     virtual void expectedXBeforeY(Token previousToken, std::string expectedWhat, Token afterToken, std::string beforeWhat) = 0;
+    virtual void wrongTypeArgument(Token wrongToken, std::string toWhat, std::string whichType = "") = 0;
+    virtual void invalidOperands(Token left, Token op, Token right, std::string toWhat, std::string leftType, std::string rightType) = 0;
 protected:
     std::vector<std::string> lines = {};
     void extractLines(const std::string& source);

@@ -1,8 +1,10 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include "./src/parser/Parser.h"
-#include "./src/error/ConsoleErrorPrinter.h"
+#include "Parser.h"
+#include "ConsoleErrorPrinter.h"
+#include "Interpreter.h"
+#include "RuntimeValue.h"
 #include <chrono>
 
 void repl(){
@@ -21,7 +23,6 @@ int main(int argc, char* argv[]){
     } else if (argc == 2) {
         std::ifstream file(argv[1]);
         std::string source;
-//        (10 + 5myVar;
         if (file.is_open()) {
             std::string line;
             while (std::getline(file, line)) {
@@ -38,11 +39,20 @@ int main(int argc, char* argv[]){
             } catch (std::runtime_error &err) {
                 exit(1);
             }
+            if(parser.hadError){
+                exit(1);
+            }
 //            auto end = std::chrono::high_resolution_clock::now();
 //            std::chrono::duration<double> duration = end - start;
 //            double duration_seconds = duration.count();
 //            std::cout << "Elapsed time: " << duration_seconds << " seconds" << std::endl;
             program.printAST();
+            std::cout << "\n";
+            std::cout << "Program successfully parsed.\n";
+            Interpreter interpreter(printer);
+            RuntimeValuePtr result = interpreter.visitProgram(&program);
+            std::cout << "Result: " << result->stringify() << std::endl;
+
         } else {
             std::cout << "Error opening file. Check if there is a file with the selected name.\n";
         }

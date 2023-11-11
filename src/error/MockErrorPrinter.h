@@ -13,6 +13,8 @@ public:
     ~MockErrorPrinter() override = default;
     void printLexerError(unsigned int line, unsigned int offset, std::string message) override;
     void expectedXBeforeY(Token previousToken, std::string expectedWhat, Token afterToken, std::string beforeWhat) override;
+    void wrongTypeArgument(Token wrongToken, std::string toWhat, std::string whichType) override;
+    void invalidOperands(Token left, Token op, Token right, std::string toWhat, std::string leftType, std::string rightType) override;
     unsigned int numberOfTimesCalled = 0; // For testing purposes
 };
 

@@ -8,7 +8,8 @@
 #include <iostream>
 #include "Expression.h"
 #include "Token.h"
-#include "Visitor.h"
+#include "Interpreter.h"
+#include "RuntimeValue.h"
 
 namespace ast{
     class NumericLiteral : public Expression {
@@ -20,9 +21,9 @@ namespace ast{
         double number;
         TokenPtr token;
         ~NumericLiteral() override = default;
-//        void accept(Visitor* visitor) const override{
-//            visitor->visitNumericLiteral(this);
-//        }
+        RuntimeValuePtr accept(Interpreter* visitor) const override{
+            return visitor->visitNumericLiteral(this);
+        }
         void print() override {
             std::cout << number << " ";
         }

@@ -7,7 +7,7 @@
 
 #include "Statement.h"
 #include "Token.h"
-#include "Visitor.h"
+#include "Interpreter.h"
 
 namespace ast {
     typedef std::shared_ptr<Token> TokenPtr;
@@ -15,9 +15,9 @@ namespace ast {
     public:
         Expression() : Statement() {}
         virtual ~Expression() = default;
-//        virtual void accept(Visitor* visitor) const{
-//            visitor->visitExpression(this);
-//        };
+        RuntimeValuePtr accept(Interpreter* visitor) const override{
+            return visitor->visitExpression(this);
+        };
         virtual void print() override {};
     };
 }

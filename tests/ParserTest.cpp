@@ -112,7 +112,7 @@ TEST_CASE("Parses unary expressions", "[Parser]") {
         REQUIRE(unary);
         CHECK(unary->_operator->value == "!");
         std::shared_ptr<ast::BooleanLiteral> booleanLiteral = std::dynamic_pointer_cast<ast::BooleanLiteral>(
-                unary->expr);
+                unary->right);
         REQUIRE(booleanLiteral);
         CHECK(booleanLiteral->value);
     }SECTION("Parses minus unary") {
@@ -124,7 +124,7 @@ TEST_CASE("Parses unary expressions", "[Parser]") {
         REQUIRE(unary);
         CHECK(unary->_operator->value == "-");
         std::shared_ptr<ast::GroupingExpression> groupExpr = std::dynamic_pointer_cast<ast::GroupingExpression>(
-                unary->expr);
+                unary->right);
         REQUIRE(groupExpr);
         std::shared_ptr<ast::BinaryExpression> binaryExpr = std::dynamic_pointer_cast<ast::BinaryExpression>(
                 groupExpr->expr);

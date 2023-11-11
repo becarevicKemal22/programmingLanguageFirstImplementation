@@ -56,7 +56,7 @@ ExprPtr Parser::comparisonExpression() {
 
 ExprPtr Parser::additiveExpression() {
     ExprPtr expr = multiplicativeExpression();
-    while(at().value == "+" || at().value == "-"){
+    while(match({TokenType::Plus, TokenType::Minus})){
         std::shared_ptr<Token> _operator = advance();
         ExprPtr right = multiplicativeExpression();
         expr = std::make_shared<ast::BinaryExpression>(expr, _operator, right);
@@ -66,7 +66,7 @@ ExprPtr Parser::additiveExpression() {
 
 ExprPtr Parser::multiplicativeExpression() {
     ExprPtr expr = unaryExpression();
-    while(at().value == "*" || at().value == "/" || at().value == "%"){
+    while(match({TokenType::Star, TokenType::Slash, TokenType::Percent})){
         std::shared_ptr<Token> _operator = advance();
         ExprPtr right = unaryExpression();
         expr = std::make_shared<ast::BinaryExpression>(expr, _operator, right);

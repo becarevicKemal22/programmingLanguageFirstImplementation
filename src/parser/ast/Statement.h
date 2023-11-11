@@ -6,16 +6,16 @@
 #define MATURSKI_STATEMENT_H
 
 #include <memory>
-#include "../visitor/Visitor.h"
+#include "Interpreter.h"
 
 namespace ast {
     class Statement{
     public:
         Statement() = default;
         virtual ~Statement() = default;
-//        virtual void accept(Visitor* visitor) const {
-//            visitor->visitStatement(this);
-//        };
+        virtual RuntimeValuePtr accept(Interpreter* visitor) const {
+            return visitor->visitStatement(this);
+        };
         virtual void print() = 0;
     };
 }

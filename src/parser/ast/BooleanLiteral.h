@@ -7,6 +7,8 @@
 
 #include <iostream>
 #include "Expression.h"
+#include "RuntimeValue.h"
+#include "Interpreter.h"
 
 namespace ast{
     class BooleanLiteral : public Expression {
@@ -20,6 +22,9 @@ namespace ast{
         void print() override {
             std::cout << token->value << " ";
         }
+        RuntimeValuePtr accept(Interpreter* visitor) const override {
+            return visitor->visitBooleanLiteral(this);
+        };
     };
 }
 
