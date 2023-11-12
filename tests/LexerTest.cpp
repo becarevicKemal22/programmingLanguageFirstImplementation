@@ -152,6 +152,53 @@ TEST_CASE("Correctly tokenizes keywords", "[Lexer]") {
     checkTypeAndContent(lexer, 6, TokenType::Netacno, "netacno");
 }
 
+TEST_CASE("Tokenizes strings", "[Lexer]"){
+    MockErrorPrinter printer;
+    SECTION("Tokenizes empty string"){
+        std::string source = " \"\" ";
+        Lexer lexer(source);
+        try{
+            lexer.tokenize(printer);
+        }catch(std::exception& err){
+            std::cout << err.what() << "\n";
+        }
+        REQUIRE(lexer.tokens.size() == 2);
+        checkTypeAndContent(lexer, 0, TokenType::String, "\"\"");
+        CHECK(lexer.tokens[0].charOffset == 1);
+    }
+    SECTION("Tokenizes normal string"){
+        std::string source = " \"This is a string!\" ";
+        Lexer lexer(source);
+        try{
+            lexer.tokenize(printer);
+        }catch(std::exception& err){
+            std::cout << err.what() << "\n";
+        }
+        REQUIRE(lexer.tokens.size() == 2);
+        checkTypeAndContent(lexer, 0, TokenType::String, "\"This is a string!\"");
+        CHECK(lexer.tokens[0].charOffset == 1);
+    }
+    SECTION("Tokenizes string with offset"){
+        std::string source = "\n\t \"Offset\"";
+        Lexer lexer(source);
+        try{
+            lexer.tokenize(printer);
+        }catch(std::exception& err){
+            std::cout << err.what() << "\n";
+        }
+        REQUIRE(lexer.tokens.size() == 2);
+        checkTypeAndContent(lexer, 0, TokenType::String, "\"Offset\"");
+        CHECK(lexer.tokens[0].charOffset == 5);
+        CHECK(lexer.tokens[0].line == 2);
+    }
+    SECTION("Gives error on unterminated string"){
+        std::string source = "\"Unterminated string ";
+        Lexer lexer(source);
+        REQUIRE_THROWS(lexer.tokenize(printer));
+        REQUIRE(printer.numberOfTimesCalled == 1);
+    }
+}
+
 TEST_CASE("Tokenizes variable declaration", "[Lexer]") {
     std::string source = "var var2 = 5.36;";
     MockErrorPrinter printer;

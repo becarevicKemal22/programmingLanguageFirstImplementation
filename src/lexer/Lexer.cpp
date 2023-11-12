@@ -96,6 +96,8 @@ std::vector<Token> Lexer::tokenize(ErrorPrinter& printer) {
                 pushToken(TokenType::Greater, ">");
             }
             advance();
+        } else if(c == '"'){
+            handleString(printer);
         } else if (c == '\n' || c == '\r') {
             newLine();
         } else if (c == ' ') {
@@ -158,6 +160,24 @@ void Lexer::handleComment(){
         }
     }
     newLine();
+}
+
+void Lexer::handleString(ErrorPrinter& printer) {
+    std::string value = "\"";
+    int startLine = line;
+    int startOffset = charIndexOnLine;
+    advance();
+    while(at() != '"' && at() != '\0'){
+        value += at();
+        advance();
+    }
+    if(at() == '\0'){
+        printer.printLexerError(startLine, startOffset, "Unterminated string found.");
+        throw std::runtime_error("Unterminated string found.");
+    }
+    value += at();
+    advance();
+    pushStringToken(value, startLine, startOffset);
 }
 
 void Lexer::advance(){

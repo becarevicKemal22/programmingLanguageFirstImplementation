@@ -26,10 +26,14 @@ private:
     void pushToken(TokenType type, std::string value){
         tokens.emplace_back(type, value, line, (charIndexOnLine + 1) - value.length());
     }
+    void pushStringToken(std::string value, int line, int offset){
+        tokens.emplace_back(TokenType::String, value, line, offset);
+    }
     void pushToken(TokenType type, char c){
         tokens.emplace_back(type, std::string(1, c), line, charIndexOnLine);
     }
     void handleComment();
+    void handleString(ErrorPrinter& printer);
     void advance();
     void newLine();
     unsigned int currentChar = 0;

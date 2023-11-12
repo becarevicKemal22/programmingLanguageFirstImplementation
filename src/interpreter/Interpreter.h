@@ -18,6 +18,7 @@ namespace ast {
     class GroupingExpression;
     class UnaryExpression;
     class BinaryExpression;
+    class StringLiteral;
 }
 
 class Interpreter {
@@ -28,6 +29,7 @@ public:
     RuntimeValuePtr visitExpression(const ast::Expression* expr);
     RuntimeValuePtr visitNumericLiteral(const ast::NumericLiteral* expr);
     RuntimeValuePtr visitBooleanLiteral(const ast::BooleanLiteral* expr);
+    RuntimeValuePtr visitStringLiteral(const ast::StringLiteral* expr);
     RuntimeValuePtr visitNullLiteral(const ast::NullLiteral* expr);
     RuntimeValuePtr visitGroupingExpression(const ast::GroupingExpression* expr);
     RuntimeValuePtr visitUnaryExpression(const ast::UnaryExpression* expr);
@@ -38,6 +40,7 @@ private:
     RuntimeValuePtr evaluate(ast::Expression* expr);
     bool isTruthy(RuntimeValuePtr value);
     bool areOperandsNumeric(RuntimeValuePtr left, RuntimeValuePtr right);
+    bool areOperandsStrings(RuntimeValuePtr left, RuntimeValuePtr right);
     bool isEqual(RuntimeValuePtr left, RuntimeValuePtr right);
     Token getMostRelevantToken(ast::Expression* expr);
     void error(std::string message);

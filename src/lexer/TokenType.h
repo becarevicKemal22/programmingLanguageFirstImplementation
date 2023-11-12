@@ -6,9 +6,9 @@
 #define MATURSKI_TOKENTYPE_H
 
 enum class TokenType{
-    Eof, ErrorSupportToken,
+    Eof,
     OpenParen, ClosedParen, OpenBrace, ClosedBrace, OpenBracket, ClosedBracket,
-    Var, Konst, Ako, Dok, Identifikator, Broj, Prazno, Tacno, Netacno,
+    Var, Konst, Ako, Dok, Identifikator, Broj, String, Prazno, Tacno, Netacno,
     Plus, Minus, Star, Slash, Percent,
     Semicolon, Colon, Comma, Dot, Bang, BangEqual, Less, LessEqual, Greater, GreaterEqual,
     Equal, DoubleEqual

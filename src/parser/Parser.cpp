@@ -8,6 +8,7 @@
 #include "NullLiteral.h"
 #include "GroupingExpression.h"
 #include "UnaryExpression.h"
+#include "StringLiteral.h"
 
 ast::Program Parser::parse(const std::string &source) {
     ast::Program program;
@@ -88,7 +89,10 @@ ExprPtr Parser::primaryExpression(){
         return std::make_shared<ast::NumericLiteral>(advance());
     }else if(atType(TokenType::Identifikator)){
         return std::make_shared<ast::Identifier>(advance());
-    }else if(atType(TokenType::Prazno)){
+    }else if(atType(TokenType::String)){
+        return std::make_shared<ast::StringLiteral>(advance());
+    }
+    else if(atType(TokenType::Prazno)){
         return std::make_shared<ast::NullLiteral>(advance());
     }else if(atType(TokenType::Tacno) || atType(TokenType::Netacno)){
         return std::make_shared<ast::BooleanLiteral>(advance());

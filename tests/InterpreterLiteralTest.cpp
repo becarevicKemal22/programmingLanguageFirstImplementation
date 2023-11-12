@@ -79,3 +79,17 @@ TEST_CASE("Outputs boolean literals", "[interpreter][literal][boolean]"){
         REQUIRE(result->stringify() == "netacno");
     }
 }
+
+TEST_CASE("Outputs string literals", "[interpreter][literal][string]"){
+    MockErrorPrinter printer;
+    Parser parser(printer);
+    Interpreter interpreter(printer);
+
+    SECTION("Returns string value"){
+        std::string source = "\"Some string\"";
+        ast::Program program = parser.parse(source);
+        RuntimeValuePtr result = interpreter.visitProgram(&program);
+        REQUIRE(result->type == ValueType::String);
+        REQUIRE(result->stringify() == "Some string");
+    }
+}

@@ -16,6 +16,7 @@
 #include "BooleanLiteral.h"
 #include "GroupingExpression.h"
 #include "UnaryExpression.h"
+#include "StringLiteral.h"
 
 TEST_CASE("Correctly parses primary expressions", "[Parser]") {
     MockErrorPrinter printer;
@@ -51,6 +52,33 @@ TEST_CASE("Correctly parses primary expressions", "[Parser]") {
     booleanLiteral = std::dynamic_pointer_cast<ast::BooleanLiteral>(body[6]);
     REQUIRE(booleanLiteral);
     CHECK_FALSE(booleanLiteral->value);
+}
+
+TEST_CASE("Parses string literals", "[Parser]"){
+    MockErrorPrinter printer;
+    Parser parser(printer);
+    SECTION("No offset string"){
+        const std::string source = "\"This is a string! \"";
+        ast::Program program = parser.parse(source);
+        std::vector<std::shared_ptr<ast::Statement>> body = program.body;
+        REQUIRE(body.size() == 1);
+        std::shared_ptr<ast::StringLiteral> literal = std::dynamic_pointer_cast<ast::StringLiteral>(body[0]);
+        REQUIRE(literal);
+        REQUIRE(literal->value == "This is a string! ");
+        REQUIRE(literal->token->charOffset == 0);
+    }
+    SECTION("String with offset and newline"){
+        const std::string source = "\n\t \"Offset\"";
+        ast::Program program = parser.parse(source);
+        std::vector<std::shared_ptr<ast::Statement>> body = program.body;
+        REQUIRE(body.size() == 1);
+        std::shared_ptr<ast::StringLiteral> literal = std::dynamic_pointer_cast<ast::StringLiteral>(body[0]);
+        REQUIRE(literal);
+        REQUIRE(literal->value == "Offset");
+        REQUIRE(literal->token->charOffset == 5);
+        REQUIRE(literal->token->line == 2);
+    }
+
 }
 
 TEST_CASE("Basic binary expression", "[Parser]") {

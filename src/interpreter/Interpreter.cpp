@@ -13,6 +13,8 @@
 #include "NullValue.h"
 #include "GroupingExpression.h"
 #include "UnaryExpression.h"
+#include "StringLiteral.h"
+#include "StringValue.h"
 
 RuntimeValuePtr Interpreter::visitProgram(const ast::Program *program) {
     RuntimeValuePtr lastEvaluated = nullptr;
@@ -44,6 +46,10 @@ RuntimeValuePtr Interpreter::visitNumericLiteral(const ast::NumericLiteral *expr
 
 RuntimeValuePtr Interpreter::visitBooleanLiteral(const ast::BooleanLiteral *expr) {
     return std::make_shared<BooleanValue>(expr->value);
+}
+
+RuntimeValuePtr Interpreter::visitStringLiteral(const ast::StringLiteral *expr) {
+    return std::make_shared<StringValue>(expr->value);
 }
 
 RuntimeValuePtr Interpreter::visitNullLiteral(const ast::NullLiteral *expr) {
@@ -85,13 +91,20 @@ RuntimeValuePtr Interpreter::visitBinaryExpression(const ast::BinaryExpression *
             return std::make_shared<NumericValue>(leftNum->value - rightNum->value);
         }
         case TokenType::Plus: {
-            if(!areOperandsNumeric(left, right)){
+            if(areOperandsNumeric(left, right)){
+                std::shared_ptr<NumericValue> leftNum = std::dynamic_pointer_cast<NumericValue>(left);
+                std::shared_ptr<NumericValue> rightNum = std::dynamic_pointer_cast<NumericValue>(right);
+                return std::make_shared<NumericValue>(leftNum->value + rightNum->value);
+            }else if(areOperandsStrings(left, right)){
+                std::shared_ptr<StringValue> leftStr = std::dynamic_pointer_cast<StringValue>(left);
+                std::shared_ptr<StringValue> rightStr = std::dynamic_pointer_cast<StringValue>(right);
+                return std::make_shared<StringValue>(leftStr->value + rightStr->value);
+            }
+            else{
                 printer.invalidOperands(getMostRelevantToken(expr->left.get()), *expr->_operator.get(), getMostRelevantToken(expr->right.get()), "binary expression", stringifyRuntimeType(left->type), stringifyRuntimeType(right->type));
                 error("Minus operator can only be applied to numeric values.");
             }
-            std::shared_ptr<NumericValue> leftNum = std::dynamic_pointer_cast<NumericValue>(left);
-            std::shared_ptr<NumericValue> rightNum = std::dynamic_pointer_cast<NumericValue>(right);
-            return std::make_shared<NumericValue>(leftNum->value + rightNum->value);
+
         }
         case TokenType::Star: {
             if(!areOperandsNumeric(left, right)){
@@ -182,6 +195,10 @@ bool Interpreter::areOperandsNumeric(RuntimeValuePtr left, RuntimeValuePtr right
     return (left->type == ValueType::Number) && (right->type == ValueType::Number);
 }
 
+bool Interpreter::areOperandsStrings(RuntimeValuePtr left, RuntimeValuePtr right) {
+    return ((left->type == ValueType::String) && (right->type == ValueType::String));
+}
+
 Token Interpreter::getMostRelevantToken(ast::Expression* expr){
     if(auto binaryExpr = dynamic_cast<ast::BinaryExpression*>(expr)){
         return *binaryExpr->_operator;
@@ -201,6 +218,9 @@ Token Interpreter::getMostRelevantToken(ast::Expression* expr){
     if(auto literal = dynamic_cast<ast::NullLiteral*>(expr)){
         return *literal->token;
     }
+    if(auto literal = dynamic_cast<ast::StringLiteral*>(expr)){
+        return *literal->token;
+    }
     error("Unknown expression type.");
 }
 
@@ -212,6 +232,9 @@ bool Interpreter::isEqual(RuntimeValuePtr left, RuntimeValuePtr right){
     }
     if(left->type == ValueType::Boolean && right->type == ValueType::Boolean){
         return std::dynamic_pointer_cast<BooleanValue>(left)->value == std::dynamic_pointer_cast<BooleanValue>(right)->value;
+    }
+    if(left->type == ValueType::String && right->type == ValueType::String){
+        return std::dynamic_pointer_cast<StringValue>(left)->value == std::dynamic_pointer_cast<StringValue>(right)->value;
     }
     return false;
 }
