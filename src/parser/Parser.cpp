@@ -133,7 +133,8 @@ ExprPtr Parser::primaryExpression(){
     }
 
     else{
-        printer.printLexerError(at().line, at().charOffset, "Expected expression.");
+//        printer.printLexerError(at().line, at().charOffset, "Expected expression.");
+        printer.expectedXBeforeY(previous(), "expression", at(), at().value);
         throw std::runtime_error("Parser error.");
     }
 }

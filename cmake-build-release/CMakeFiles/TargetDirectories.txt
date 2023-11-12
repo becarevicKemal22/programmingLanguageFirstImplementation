@@ -1,0 +1,12 @@
+C:/Users/kemal/CLionProjects/Maturski/cmake-build-release/CMakeFiles/Maturski.dir
+C:/Users/kemal/CLionProjects/Maturski/cmake-build-release/CMakeFiles/edit_cache.dir
+C:/Users/kemal/CLionProjects/Maturski/cmake-build-release/CMakeFiles/rebuild_cache.dir
+C:/Users/kemal/CLionProjects/Maturski/cmake-build-release/tests/CMakeFiles/tests.dir
+C:/Users/kemal/CLionProjects/Maturski/cmake-build-release/tests/CMakeFiles/edit_cache.dir
+C:/Users/kemal/CLionProjects/Maturski/cmake-build-release/tests/CMakeFiles/rebuild_cache.dir
+C:/Users/kemal/CLionProjects/Maturski/cmake-build-release/tests/lib/Catch2/CMakeFiles/edit_cache.dir
+C:/Users/kemal/CLionProjects/Maturski/cmake-build-release/tests/lib/Catch2/CMakeFiles/rebuild_cache.dir
+C:/Users/kemal/CLionProjects/Maturski/cmake-build-release/tests/lib/Catch2/src/CMakeFiles/Catch2.dir
+C:/Users/kemal/CLionProjects/Maturski/cmake-build-release/tests/lib/Catch2/src/CMakeFiles/Catch2WithMain.dir
+C:/Users/kemal/CLionProjects/Maturski/cmake-build-release/tests/lib/Catch2/src/CMakeFiles/edit_cache.dir
+C:/Users/kemal/CLionProjects/Maturski/cmake-build-release/tests/lib/Catch2/src/CMakeFiles/rebuild_cache.dir

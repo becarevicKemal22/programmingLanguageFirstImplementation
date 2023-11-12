@@ -21,7 +21,12 @@ void ConsoleErrorPrinter::printLexerError(unsigned int line, unsigned int offset
 
 void ConsoleErrorPrinter::expectedXBeforeY(Token previousToken, std::string expectedWhat, Token afterToken,
                                            std::string beforeWhat) {
-    std::string message = "Expected '" + expectedWhat + "' before '" + beforeWhat + "'";
+    std::string message = "Expected '" + expectedWhat + "' before ";
+    if(afterToken.type == TokenType::Eof){
+        message += "end of input";
+    }else{
+        message += "'" + beforeWhat + "'";
+    }
     errorOnLine(previousToken.line, message);
     int prev = std::to_string(previousToken.line).length();
     int after = std::to_string(afterToken.line).length();
@@ -31,7 +36,7 @@ void ConsoleErrorPrinter::expectedXBeforeY(Token previousToken, std::string expe
     if (lineDiff == 0) {
         printSourceLineWithHighlightedToken(previousToken.line, maxW, afterToken, ANSI_GREEN);
         printSupportLineWithHighlightedToken(maxW, afterToken, ANSI_GREEN, missingCharLocation);
-        printMissingCharHint(maxW, expectedWhat, ANSI_GREEN, missingCharLocation);
+        printMissingCharHint(maxW, expectedWhat, ANSI_RED, missingCharLocation);
     } else {
         printSourceLine(previousToken.line, maxW);
         printSupportMissingCharPointerLine(maxW, ANSI_RED, missingCharLocation);
@@ -129,6 +134,8 @@ void ConsoleErrorPrinter::printSupportPointerTypeLine(unsigned int line, unsigne
 void
 ConsoleErrorPrinter::printSourceLineWithHighlightedToken(unsigned int line, unsigned int maxW, Token tokenToHighlight,
                                                          std::string ANSI_COLOR_CODE) {
+    if(tokenToHighlight.type == TokenType::Eof) return;
+
     cout << "\t" << std::setw(maxW) << std::right << line << std::setfill(' ') << std::left << " | ";
     std::string lineStr = lines.at(line - 1);
     size_t length = lineStr.length();

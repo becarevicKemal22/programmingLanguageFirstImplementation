@@ -7,17 +7,23 @@
 #include "RuntimeValue.h"
 #include <chrono>
 
-void repl(){
+void repl() {
     std::cout << "Repl v0.1\n";
-    while(true){
+    while (true) {
         std::cout << "> ";
         std::string src;
         std::getline(std::cin, src);
-        // Run program
+        ConsoleErrorPrinter printer(src);
+        Parser parser(printer);
+        ast::Program program;
+        program = parser.parse(src);
+        Interpreter interpreter(printer);
+        RuntimeValuePtr result = interpreter.visitProgram(&program);
+        std::cout << result->stringify() << "\n";
     }
 }
 
-int main(int argc, char* argv[]){
+int main(int argc, char *argv[]) {
     if (argc == 1) {
         repl();
     } else if (argc == 2) {
@@ -34,12 +40,9 @@ int main(int argc, char* argv[]){
             Parser parser(printer);
             ast::Program program;
 //            auto start = std::chrono::high_resolution_clock::now();
-            try {
-                program = parser.parse(source);
-            } catch (std::runtime_error &err) {
-                exit(1);
-            }
-            if(parser.hadError){
+
+            program = parser.parse(source);
+            if (parser.hadError) {
                 exit(1);
             }
 //            auto end = std::chrono::high_resolution_clock::now();
