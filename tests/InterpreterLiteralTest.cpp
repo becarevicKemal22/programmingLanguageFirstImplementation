@@ -19,7 +19,7 @@ TEST_CASE("Outputs null literals", "[interpreter][literal][null]") {
     Parser parser(printer);
     Interpreter interpreter(printer);
     SECTION("Returns null literal when prazno is input"){
-        std::string source = "prazno";
+        std::string source = "prazno;";
         ast::Program program = parser.parse(source);
         RuntimeValuePtr result = interpreter.visitProgram(&program);
         REQUIRE(result->type == ValueType::Null);
@@ -40,7 +40,7 @@ TEST_CASE("Outputs numeric literals", "[interpreter][literal][number]"){
     Interpreter interpreter(printer);
 
     SECTION("Returns number value when integer is input"){
-        std::string source = "1";
+        std::string source = "1;";
         ast::Program program = parser.parse(source);
         RuntimeValuePtr result = interpreter.visitProgram(&program);
         REQUIRE(result->type == ValueType::Number);
@@ -49,7 +49,7 @@ TEST_CASE("Outputs numeric literals", "[interpreter][literal][number]"){
         REQUIRE(result->stringify() == "1");
     }
     SECTION("Returns number value when double is input"){
-        std::string source = "1.234";
+        std::string source = "1.234;";
         ast::Program program = parser.parse(source);
         RuntimeValuePtr result = interpreter.visitProgram(&program);
         REQUIRE(result->type == ValueType::Number);
@@ -65,14 +65,14 @@ TEST_CASE("Outputs boolean literals", "[interpreter][literal][boolean]"){
     Interpreter interpreter(printer);
 
     SECTION("Returns true value when tacno is input"){
-        std::string source = "tacno";
+        std::string source = "tacno;";
         ast::Program program = parser.parse(source);
         RuntimeValuePtr result = interpreter.visitProgram(&program);
         REQUIRE(result->type == ValueType::Boolean);
         REQUIRE(result->stringify() == "tacno");
     }
     SECTION("Returns false value when netacno is input"){
-        std::string source = "netacno";
+        std::string source = "netacno;";
         ast::Program program = parser.parse(source);
         RuntimeValuePtr result = interpreter.visitProgram(&program);
         REQUIRE(result->type == ValueType::Boolean);
@@ -86,7 +86,7 @@ TEST_CASE("Outputs string literals", "[interpreter][literal][string]"){
     Interpreter interpreter(printer);
 
     SECTION("Returns string value"){
-        std::string source = "\"Some string\"";
+        std::string source = "\"Some string\";";
         ast::Program program = parser.parse(source);
         RuntimeValuePtr result = interpreter.visitProgram(&program);
         REQUIRE(result->type == ValueType::String);

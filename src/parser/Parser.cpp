@@ -9,6 +9,8 @@
 #include "GroupingExpression.h"
 #include "UnaryExpression.h"
 #include "StringLiteral.h"
+#include "PrintStatement.h"
+#include "ExprStatement.h"
 
 ast::Program Parser::parse(const std::string &source) {
     ast::Program program;
@@ -26,7 +28,29 @@ ast::Program Parser::parse(const std::string &source) {
 }
 
 std::shared_ptr<ast::Statement> Parser::statement(){
-    return expression();
+    if(atType(TokenType::Print)){
+        return printStatement();
+    }
+    return expressionStatement();
+}
+
+StmtPtr Parser::printStatement(){
+    advance();
+    ExprPtr valueToPrint = expression();
+    if(!consume(TokenType::Semicolon)){
+        printer.expectedXBeforeY(previous(), ";", at(), at().value);
+        throw std::runtime_error("Parser error.");
+    }
+    return std::make_shared<ast::PrintStatement>(valueToPrint);
+}
+
+StmtPtr Parser::expressionStatement(){
+    ExprPtr expr = expression();
+    if(!consume(TokenType::Semicolon)){
+        printer.expectedXBeforeY(previous(), ";", at(), at().value);
+        throw std::runtime_error("Parser error.");
+    }
+    return std::make_shared<ast::ExprStatement>(expr);
 }
 
 ExprPtr Parser::expression(){
@@ -117,15 +141,16 @@ ExprPtr Parser::primaryExpression(){
 void Parser::synchronize() {
     advance();
     while(!atType(TokenType::Eof)){
-        if(at().type == TokenType::Semicolon){
+        if(previous().type == TokenType::Semicolon){
             return;
         }
         switch (at().type) {
-            // Fali klasa funkcija for print i return
+            // Fali klasa funkcija for i return
             case TokenType::Var:
             case TokenType::Konst:
             case TokenType::Ako:
             case TokenType::Dok:
+            case TokenType::Print:
                 return;
             default:
                 advance();

@@ -12,6 +12,7 @@
 #include "Expression.h"
 
 typedef std::shared_ptr<ast::Expression> ExprPtr;
+typedef std::shared_ptr<ast::Statement> StmtPtr;
 
 class Parser {
 public:
@@ -31,6 +32,14 @@ private:
     bool atType(TokenType type){
         return tokens[current].type == type;
     }
+    bool consume(TokenType type){
+        if(atType(type)){
+            advance();
+            return true;
+        }else{
+            return false;
+        }
+    }
     std::shared_ptr<Token> advance(){
         std::shared_ptr<Token> tk = std::make_shared<Token>(at());
         current++;
@@ -45,7 +54,9 @@ private:
         return false;
     }
 
-    std::shared_ptr<ast::Statement> statement();
+    StmtPtr statement();
+    StmtPtr printStatement();
+    StmtPtr expressionStatement();
     ExprPtr expression();
     ExprPtr equalityExpression();
     ExprPtr comparisonExpression();

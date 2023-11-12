@@ -15,6 +15,8 @@
 #include "UnaryExpression.h"
 #include "StringLiteral.h"
 #include "StringValue.h"
+#include "ExprStatement.h"
+#include "PrintStatement.h"
 
 RuntimeValuePtr Interpreter::visitProgram(const ast::Program *program) {
     RuntimeValuePtr lastEvaluated = nullptr;
@@ -22,8 +24,7 @@ RuntimeValuePtr Interpreter::visitProgram(const ast::Program *program) {
         try{
             lastEvaluated = statement->accept(this);
         }catch(std::exception& e){
-            std::cout << e.what() << std::endl;
-            exit(1);
+            hadRuntimeError = true;
         }
     }
     if(!lastEvaluated){
@@ -242,4 +243,14 @@ bool Interpreter::isEqual(RuntimeValuePtr left, RuntimeValuePtr right){
 void Interpreter::error(std::string message){
     hadRuntimeError = true;
     throw std::runtime_error(message);
+}
+
+RuntimeValuePtr Interpreter::visitExprStatement(const ast::ExprStatement* stmt) {
+    return evaluate(stmt->expr.get());
+}
+
+RuntimeValuePtr Interpreter::visitPrintStatement(const ast::PrintStatement *stmt) {
+    RuntimeValuePtr value = evaluate(stmt->expr.get());
+    std::cout << value->stringify() << "\n";
+    return std::make_shared<NullValue>();
 }

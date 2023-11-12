@@ -15,7 +15,7 @@ TEST_CASE("Computes arithmetic operations", "[interpreter][binaryExpression][ari
     Parser parser(printer);
     Interpreter interpreter(printer);
     SECTION("Computes addition"){
-        std::string source = "1 + 2";
+        std::string source = "1 + 2;";
         ast::Program program = parser.parse(source);
         RuntimeValuePtr result = interpreter.visitProgram(&program);
         REQUIRE(result->type == ValueType::Number);
@@ -24,7 +24,7 @@ TEST_CASE("Computes arithmetic operations", "[interpreter][binaryExpression][ari
         REQUIRE(result->stringify() == "3");
     }
     SECTION("Computes subtraction"){
-        std::string source = "1 - 2";
+        std::string source = "1 - 2;";
         ast::Program program = parser.parse(source);
         RuntimeValuePtr result = interpreter.visitProgram(&program);
         REQUIRE(result->type == ValueType::Number);
@@ -33,7 +33,7 @@ TEST_CASE("Computes arithmetic operations", "[interpreter][binaryExpression][ari
         REQUIRE(result->stringify() == "-1");
     }
     SECTION("Computes multiplication"){
-        std::string source = "2 * 3";
+        std::string source = "2 * 3;";
         ast::Program program = parser.parse(source);
         RuntimeValuePtr result = interpreter.visitProgram(&program);
         REQUIRE(result->type == ValueType::Number);
@@ -42,7 +42,7 @@ TEST_CASE("Computes arithmetic operations", "[interpreter][binaryExpression][ari
         REQUIRE(result->stringify() == "6");
     }
     SECTION("Computes division"){
-        std::string source = "6 / 3";
+        std::string source = "6 / 3;";
         ast::Program program = parser.parse(source);
         RuntimeValuePtr result = interpreter.visitProgram(&program);
         REQUIRE(result->type == ValueType::Number);
@@ -51,7 +51,7 @@ TEST_CASE("Computes arithmetic operations", "[interpreter][binaryExpression][ari
         REQUIRE(result->stringify() == "2");
     }
     SECTION("Computes remainder"){
-        std::string source = "7 % 3";
+        std::string source = "7 % 3;";
         ast::Program program = parser.parse(source);
         RuntimeValuePtr result = interpreter.visitProgram(&program);
         REQUIRE(result->type == ValueType::Number);
@@ -60,7 +60,7 @@ TEST_CASE("Computes arithmetic operations", "[interpreter][binaryExpression][ari
         REQUIRE(result->stringify() == "1");
     }
     SECTION("Computes complex arithmetic expression"){
-        std::string source = "(6 / 3 + 5)/2 - (10 % 3)";
+        std::string source = "(6 / 3 + 5)/2 - (10 % 3);";
         ast::Program program = parser.parse(source);
         RuntimeValuePtr result = interpreter.visitProgram(&program);
         REQUIRE(result->type == ValueType::Number);

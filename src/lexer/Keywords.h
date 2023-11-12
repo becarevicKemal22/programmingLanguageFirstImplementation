@@ -17,6 +17,7 @@ const std::unordered_map<std::string, TokenType> KEYWORDS = {
         {"prazno", TokenType::Prazno},
         {"tacno", TokenType::Tacno},
         {"netacno", TokenType::Netacno},
+        {"print", TokenType::Print},
 };
 
 #endif //MATURSKI_KEYWORDS_H

@@ -28,7 +28,7 @@ namespace ast{
             return visitor->visitStringLiteral(this);
         }
         void print() override {
-            std::cout << value << " ";
+            std::cout << "\"" + value + "\"" << " ";
         }
     };
 }

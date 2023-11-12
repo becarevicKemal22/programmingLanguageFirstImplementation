@@ -16,7 +16,7 @@ TEST_CASE("Negates number value", "[interpreter][unary][number]") {
     Interpreter interpreter(printer);
 
     SECTION("Negates integer number value"){
-        std::string source = "-1";
+        std::string source = "-1;";
         ast::Program program = parser.parse(source);
         RuntimeValuePtr result = interpreter.visitProgram(&program);
         REQUIRE(result->type == ValueType::Number);
@@ -25,7 +25,7 @@ TEST_CASE("Negates number value", "[interpreter][unary][number]") {
         REQUIRE(result->stringify() == "-1");
     }
     SECTION("Negates double number value"){
-        std::string source = "-1.234";
+        std::string source = "-1.234;";
         ast::Program program = parser.parse(source);
         RuntimeValuePtr result = interpreter.visitProgram(&program);
         REQUIRE(result->type == ValueType::Number);

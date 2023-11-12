@@ -19,13 +19,18 @@ namespace ast {
     class UnaryExpression;
     class BinaryExpression;
     class StringLiteral;
+    class ExprStatement;
+    class PrintStatement;
 }
 
 class Interpreter {
 public:
     Interpreter(ErrorPrinter& printer) : printer(printer) {};
-    RuntimeValuePtr visitProgram(const ast::Program* expr);
-    RuntimeValuePtr visitStatement(const ast::Statement* expr);
+    RuntimeValuePtr visitProgram(const ast::Program* stmt);
+    RuntimeValuePtr visitStatement(const ast::Statement* stmt);
+    RuntimeValuePtr visitExprStatement(const ast::ExprStatement* stmt);
+    RuntimeValuePtr visitPrintStatement(const ast::PrintStatement* stmt);
+
     RuntimeValuePtr visitExpression(const ast::Expression* expr);
     RuntimeValuePtr visitNumericLiteral(const ast::NumericLiteral* expr);
     RuntimeValuePtr visitBooleanLiteral(const ast::BooleanLiteral* expr);
