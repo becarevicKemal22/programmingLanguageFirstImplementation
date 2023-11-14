@@ -8,6 +8,7 @@
 #include "StringValue.h"
 #include "exceptions/UndeclaredVariable.h"
 #include "exceptions/VariableRedeclaration.h"
+#include "exceptions/ConstReassignment.h"
 
 std::shared_ptr<Token> makeToken(std::string name){
     return std::make_shared<Token>(TokenType::Identifikator, name, 1, 0);
@@ -37,5 +38,9 @@ TEST_CASE("Throws VariableRedeclaration exception when variable is redeclared"){
     std::shared_ptr<StringValue> value2 = std::make_shared<StringValue>("Mystring2");
     env.define(makeToken("myVar"), value, false);
     REQUIRE_THROWS_AS(env.define(makeToken("myVar"), value2, false), VariableRedeclaration);
+}
 
+TEST_CASE("Throws error when trying to reassign const"){
+    Environment env;
+    env.define(makeToken("constant"), {}, true);
 }

@@ -37,6 +37,17 @@ TEST_CASE("Correctly declares variables", "[interpreter][variable][declaration]"
         std::shared_ptr<NullValue> value = std::dynamic_pointer_cast<NullValue>(it->second.first);
         REQUIRE(value);
     }
+    SECTION("Correctly declares constant variable"){
+        std::string source = "konst a = 5;";
+        ast::Program program = parser.parse(source);
+        interpreter.visitProgram(&program);
+        auto it = interpreter.environment.variables.find("a");
+        REQUIRE(it != interpreter.environment.variables.end());
+        REQUIRE(it->second.second == true);
+        std::shared_ptr<NumericValue> value = std::dynamic_pointer_cast<NumericValue>(it->second.first);
+        REQUIRE(value);
+        REQUIRE_THAT(value->value, Catch::Matchers::WithinRel(5.0));
+    }
 }
 
 TEST_CASE("Handles errors", "[interpreter][variable][declaration]"){

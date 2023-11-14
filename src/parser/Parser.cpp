@@ -13,6 +13,7 @@
 #include "ExprStatement.h"
 #include "Expression.h"
 #include "VarDeclaration.h"
+#include "exceptions/UninitializedConst.h"
 
 ast::Program Parser::parse(const std::string &source) {
     ast::Program program;
@@ -21,7 +22,12 @@ ast::Program Parser::parse(const std::string &source) {
     while(!atType(TokenType::Eof)){
         try{
             program.body.push_back(declaration());
-        }catch(std::runtime_error& e) {
+        }catch(UninitializedConst& e){
+            printer.highlightTokenError(*e.token, e.getMessage());
+            hadError = true;
+            synchronize();
+        }
+        catch(std::runtime_error& e) {
             hadError = true;
             synchronize();
         }
@@ -30,14 +36,15 @@ ast::Program Parser::parse(const std::string &source) {
 }
 
 StmtPtr Parser::declaration() {
-    if(match({TokenType::Var})){
+    if(match({TokenType::Var, TokenType::Konst})){
         return varDeclarationStatement();
     }
     return statement();
 }
 
 StmtPtr Parser::varDeclarationStatement() {
-    advance();
+    std::shared_ptr<Token> keyword = advance();
+    bool isConst = keyword->type == TokenType::Konst;
     std::shared_ptr<Token> identifier;
     if(consume(TokenType::Identifikator)){
         identifier = std::make_shared<Token>(previous());
@@ -46,6 +53,9 @@ StmtPtr Parser::varDeclarationStatement() {
         throw std::runtime_error("Parser error.");
     }
     ExprPtr initializer = nullptr;
+    if(!atType(TokenType::Equal) && isConst){
+        throw UninitializedConst(previous(), "Variable declared as 'konst' must be initialized");
+    }
     if(atType(TokenType::Equal)){
         advance();
         initializer = expression();
@@ -54,7 +64,7 @@ StmtPtr Parser::varDeclarationStatement() {
         printer.expectedXBeforeY(previous(), ";", at(), at().value);
         throw std::runtime_error("Parser error.");
     }
-    return std::make_shared<ast::VarDeclaration>(identifier, initializer);
+    return std::make_shared<ast::VarDeclaration>(identifier, initializer, isConst);
 }
 
 std::shared_ptr<ast::Statement> Parser::statement(){
@@ -145,8 +155,7 @@ ExprPtr Parser::primaryExpression(){
         return std::make_shared<ast::Identifier>(advance());
     }else if(atType(TokenType::String)){
         return std::make_shared<ast::StringLiteral>(advance());
-    }
-    else if(atType(TokenType::Prazno)){
+    }else if(atType(TokenType::Prazno)){
         return std::make_shared<ast::NullLiteral>(advance());
     }else if(atType(TokenType::Tacno) || atType(TokenType::Netacno)){
         return std::make_shared<ast::BooleanLiteral>(advance());
@@ -169,6 +178,9 @@ ExprPtr Parser::primaryExpression(){
 }
 
 void Parser::synchronize() {
+    if(atType(TokenType::Eof)){
+        return;
+    }
     advance();
     while(!atType(TokenType::Eof)){
         if(previous().type == TokenType::Semicolon){

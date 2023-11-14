@@ -22,6 +22,7 @@ TEST_CASE("Parses valid variable declarations", "[Parser][Declaration][Variables
         std::shared_ptr<ast::VarDeclaration> declaration = std::dynamic_pointer_cast<ast::VarDeclaration>(body[0]);
         REQUIRE(declaration);
         REQUIRE(declaration->identifier->value == "x");
+        REQUIRE(!declaration->isConst);
         std::shared_ptr<ast::NumericLiteral> initializer = std::dynamic_pointer_cast<ast::NumericLiteral>(declaration->initializer);
         REQUIRE(initializer);
         REQUIRE_THAT(initializer->number, Catch::Matchers::WithinRel(5.0));
@@ -35,6 +36,7 @@ TEST_CASE("Parses valid variable declarations", "[Parser][Declaration][Variables
         std::shared_ptr<ast::VarDeclaration> declaration = std::dynamic_pointer_cast<ast::VarDeclaration>(body[0]);
         REQUIRE(declaration);
         REQUIRE(declaration->identifier->value == "myVar");
+        REQUIRE(!declaration->isConst);
         std::shared_ptr<ast::BinaryExpression> initializer = std::dynamic_pointer_cast<ast::BinaryExpression>(declaration->initializer);
         REQUIRE(initializer);
         REQUIRE(initializer->_operator->value == "+");
@@ -52,6 +54,20 @@ TEST_CASE("Parses valid variable declarations", "[Parser][Declaration][Variables
         REQUIRE(declaration);
         REQUIRE(declaration->identifier->value == "emptyVar");
         REQUIRE(declaration->initializer == nullptr);
+        REQUIRE(!declaration->isConst);
+    }
+    SECTION("'Konst' variable declaration"){
+        std::string source = "konst konstVar = 5;";
+        ast::Program program = parser.parse(source);
+        REQUIRE_FALSE(parser.hadError);
+        std::vector<std::shared_ptr<ast::Statement>> body = program.body;
+        REQUIRE(body.size() == 1);
+        std::shared_ptr<ast::VarDeclaration> declaration = std::dynamic_pointer_cast<ast::VarDeclaration>(body[0]);
+        REQUIRE(declaration);
+        REQUIRE(declaration->identifier->value == "konstVar");
+        REQUIRE(declaration->isConst);
+        std::shared_ptr<ast::NumericLiteral> initializer = std::dynamic_pointer_cast<ast::NumericLiteral>(declaration->initializer);
+        REQUIRE(initializer);
     }
 }
 
@@ -83,4 +99,5 @@ TEST_CASE("Prints errors on invalid variable declarations", "[Parser][Declaratio
         ast::Program program = parser.parse(source);
         REQUIRE(parser.hadError);
     }
+
 }

@@ -188,7 +188,9 @@
 				37,
 				39,
 				40,
-				41
+				41,
+				42,
+				43
 			]
 		}
 	],
@@ -410,6 +412,16 @@
 		{
 			"backtrace" : 1,
 			"path" : "src/error/exceptions/VariableRedeclaration.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/error/exceptions/UninitializedConst.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/error/exceptions/ConstReassignment.h",
 			"sourceGroupIndex" : 1
 		}
 	],

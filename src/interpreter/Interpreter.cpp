@@ -280,6 +280,6 @@ RuntimeValuePtr Interpreter::visitVarDeclarationStatement(const ast::VarDeclarat
         value = evaluate(stmt->initializer.get());
     }
 
-    environment.define(stmt->identifier, value, false);
+    environment.define(stmt->identifier, value, stmt->isConst);
     return std::make_shared<NullValue>();
 }

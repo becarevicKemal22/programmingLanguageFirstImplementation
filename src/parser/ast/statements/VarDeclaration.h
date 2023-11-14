@@ -13,11 +13,12 @@
 namespace ast{
     class VarDeclaration : public Statement {
     public:
-        VarDeclaration(TokenPtr identifier, ExprPtr initializer) : Statement(), identifier(identifier), initializer(initializer){
+        VarDeclaration(TokenPtr identifier, ExprPtr initializer, bool isConst) : Statement(), identifier(identifier), initializer(initializer), isConst(isConst){
 
         }
         TokenPtr identifier;
         ExprPtr initializer;
+        bool isConst;
 
         RuntimeValuePtr accept(Interpreter* visitor) const override {
             return visitor->visitVarDeclarationStatement(this);
