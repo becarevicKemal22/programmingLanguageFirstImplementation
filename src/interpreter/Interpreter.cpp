@@ -17,13 +17,25 @@
 #include "StringValue.h"
 #include "ExprStatement.h"
 #include "PrintStatement.h"
+#include "VarDeclaration.h"
+#include "exceptions/UndeclaredVariable.h"
+#include "exceptions/VariableRedeclaration.h"
 
 RuntimeValuePtr Interpreter::visitProgram(const ast::Program *program) {
     RuntimeValuePtr lastEvaluated = nullptr;
     for (auto statement : program->body) {
         try{
             lastEvaluated = statement->accept(this);
-        }catch(std::exception& e){
+        }catch(UndeclaredVariable& e){
+            printer.highlightTokenError(*e.token, e.getMessage());
+            hadRuntimeError = true;
+        }
+        catch(VariableRedeclaration& e){
+            printer.highlightTokenError(*e.token, e.getMessage());
+            hadRuntimeError = true;
+        }
+        catch(std::exception& e){
+            std::cout << "INTERNAL ERROR: " << e.what() << std::endl;
             hadRuntimeError = true;
         }
     }
@@ -55,6 +67,10 @@ RuntimeValuePtr Interpreter::visitStringLiteral(const ast::StringLiteral *expr) 
 
 RuntimeValuePtr Interpreter::visitNullLiteral(const ast::NullLiteral *expr) {
     return std::make_shared<NullValue>();
+}
+
+RuntimeValuePtr Interpreter::visitIdentifierExpression(const ast::Identifier* expr){
+   return environment.get(expr->token);
 }
 
 RuntimeValuePtr Interpreter::visitGroupingExpression(const ast::GroupingExpression *expr) {
@@ -177,7 +193,7 @@ RuntimeValuePtr Interpreter::visitBinaryExpression(const ast::BinaryExpression *
             return std::make_shared<BooleanValue>(!isEqual(left, right));
         }
         default:
-            error("Unknown binary operator.");
+            std::logic_error("Unknown binary operator.");
     }
 }
 
@@ -222,7 +238,10 @@ Token Interpreter::getMostRelevantToken(ast::Expression* expr){
     if(auto literal = dynamic_cast<ast::StringLiteral*>(expr)){
         return *literal->token;
     }
-    error("Unknown expression type.");
+    if(auto literal = dynamic_cast<ast::Identifier*>(expr)){
+        return *literal->token;
+    }
+    throw std::logic_error("Unknown expression type");
 }
 
 bool Interpreter::isEqual(RuntimeValuePtr left, RuntimeValuePtr right){
@@ -252,5 +271,15 @@ RuntimeValuePtr Interpreter::visitExprStatement(const ast::ExprStatement* stmt) 
 RuntimeValuePtr Interpreter::visitPrintStatement(const ast::PrintStatement *stmt) {
     RuntimeValuePtr value = evaluate(stmt->expr.get());
     std::cout << value->stringify() << "\n";
+    return std::make_shared<NullValue>();
+}
+
+RuntimeValuePtr Interpreter::visitVarDeclarationStatement(const ast::VarDeclaration* stmt){
+    RuntimeValuePtr value = nullptr;
+    if(stmt->initializer != nullptr){
+        value = evaluate(stmt->initializer.get());
+    }
+
+    environment.define(stmt->identifier, value, false);
     return std::make_shared<NullValue>();
 }

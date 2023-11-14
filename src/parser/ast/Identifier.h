@@ -20,9 +20,9 @@ namespace ast{
         }
         std::string name;
         TokenPtr token;
-//        void accept(Visitor* visitor) const override {
-//            visitor->visitIdentifier(this);
-//        }
+        RuntimeValuePtr accept(Interpreter* visitor) const override {
+            return visitor->visitIdentifierExpression(this);
+        };
         void print() override {
             std::cout << name << " ";
         }

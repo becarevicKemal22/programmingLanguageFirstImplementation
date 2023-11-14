@@ -20,6 +20,7 @@ namespace ast {
         };
         virtual void print() override {};
     };
+    typedef std::shared_ptr<Expression> ExprPtr;
 }
 
 #endif //MATURSKI_EXPRESSION_H

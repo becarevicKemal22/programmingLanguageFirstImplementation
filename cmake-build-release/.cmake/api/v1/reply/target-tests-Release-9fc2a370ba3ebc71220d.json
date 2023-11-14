@@ -155,7 +155,11 @@
 				8,
 				9,
 				10,
-				11
+				11,
+				12,
+				13,
+				14,
+				15
 			]
 		}
 	],
@@ -163,11 +167,11 @@
 	[
 		{
 			"backtrace" : 2,
-			"id" : "Catch2::@7680d6efaf63c1d2fbac"
+			"id" : "Catch2WithMain::@7680d6efaf63c1d2fbac"
 		},
 		{
 			"backtrace" : 2,
-			"id" : "Catch2WithMain::@7680d6efaf63c1d2fbac"
+			"id" : "Catch2::@7680d6efaf63c1d2fbac"
 		}
 	],
 	"id" : "tests::@a44f0ac069e85531cdee",
@@ -223,7 +227,11 @@
 				8,
 				9,
 				10,
-				11
+				11,
+				12,
+				13,
+				14,
+				15
 			]
 		},
 		{
@@ -292,6 +300,12 @@
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
+			"path" : "src/interpreter/Environment.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
 			"path" : "tests/InterpreterLiteralTest.cpp",
 			"sourceGroupIndex" : 0
 		},
@@ -305,6 +319,24 @@
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
 			"path" : "tests/InterpreterBinaryExpressionTest.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "tests/ParserVarDeclarationTest.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "tests/InterpreterVarDeclarationTest.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "tests/EnvironmentTest.cpp",
 			"sourceGroupIndex" : 0
 		}
 	],

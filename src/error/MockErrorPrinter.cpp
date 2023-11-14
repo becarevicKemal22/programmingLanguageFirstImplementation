@@ -19,3 +19,7 @@ void MockErrorPrinter::wrongTypeArgument(Token wrongToken, std::string toWhat, s
 void MockErrorPrinter::invalidOperands(Token left, Token op, Token right, std::string toWhat, std::string leftType, std::string rightType){
     numberOfTimesCalled++;
 }
+
+void MockErrorPrinter::highlightTokenError(Token tokenToHighlight, std::string message) {
+    numberOfTimesCalled++;
+}

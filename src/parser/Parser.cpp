@@ -11,6 +11,8 @@
 #include "StringLiteral.h"
 #include "PrintStatement.h"
 #include "ExprStatement.h"
+#include "Expression.h"
+#include "VarDeclaration.h"
 
 ast::Program Parser::parse(const std::string &source) {
     ast::Program program;
@@ -18,13 +20,41 @@ ast::Program Parser::parse(const std::string &source) {
     tokens = lexer.tokenize(printer);
     while(!atType(TokenType::Eof)){
         try{
-            program.body.push_back(statement());
+            program.body.push_back(declaration());
         }catch(std::runtime_error& e) {
             hadError = true;
             synchronize();
         }
     }
     return program;
+}
+
+StmtPtr Parser::declaration() {
+    if(match({TokenType::Var})){
+        return varDeclarationStatement();
+    }
+    return statement();
+}
+
+StmtPtr Parser::varDeclarationStatement() {
+    advance();
+    std::shared_ptr<Token> identifier;
+    if(consume(TokenType::Identifikator)){
+        identifier = std::make_shared<Token>(previous());
+    }else{
+        printer.expectedXBeforeY(previous(), "identifier", at(), at().value);
+        throw std::runtime_error("Parser error.");
+    }
+    ExprPtr initializer = nullptr;
+    if(atType(TokenType::Equal)){
+        advance();
+        initializer = expression();
+    }
+    if(!consume(TokenType::Semicolon)){
+        printer.expectedXBeforeY(previous(), ";", at(), at().value);
+        throw std::runtime_error("Parser error.");
+    }
+    return std::make_shared<ast::VarDeclaration>(identifier, initializer);
 }
 
 std::shared_ptr<ast::Statement> Parser::statement(){
@@ -133,7 +163,6 @@ ExprPtr Parser::primaryExpression(){
     }
 
     else{
-//        printer.printLexerError(at().line, at().charOffset, "Expected expression.");
         printer.expectedXBeforeY(previous(), "expression", at(), at().value);
         throw std::runtime_error("Parser error.");
     }

@@ -107,6 +107,13 @@ void ConsoleErrorPrinter::invalidOperands(Token left, Token op, Token right, std
     }
 }
 
+void ConsoleErrorPrinter::highlightTokenError(Token tokenToHighlight, std::string message) {
+    errorOnLine(tokenToHighlight.line, message);
+    int maxW = std::to_string(tokenToHighlight.line).length();
+    printSourceLineWithHighlightedToken(tokenToHighlight.line, maxW, tokenToHighlight, ANSI_RED);
+    printSupportLineWithHighlightedToken(maxW, tokenToHighlight, ANSI_RED, tokenToHighlight.charOffset);
+}
+
 void ConsoleErrorPrinter::errorOnLine(unsigned int line, std::string message) {
     cout << ANSI_RED << "Error on line " << line << ": " << ANSI_RESET << message << "\n";
 }

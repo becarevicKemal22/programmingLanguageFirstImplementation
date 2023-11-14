@@ -1,9 +1,9 @@
 # ninja log v5
 31	676	7215360818050618	CMakeFiles/Maturski.dir/src/interpreter/runtimeValues/ValueType.cpp.obj	54aefb19d14e6887
 13	982	7215360821103832	CMakeFiles/Maturski.dir/src/error/ErrorPrinter.cpp.obj	eeb948ec6583afd9
+8	1885	7215360830146490	CMakeFiles/Maturski.dir/src/error/ConsoleErrorPrinter.cpp.obj	bbac3185c3c9d7a3
 49	1425	7215360825569442	CMakeFiles/Maturski.dir/main.cpp.obj	50dc0e1a00b12caf
 64	1617	7215360827468749	CMakeFiles/Maturski.dir/src/lexer/Lexer.cpp.obj	6ba0a9a5c3ad77e0
-8	1885	7215360830146490	CMakeFiles/Maturski.dir/src/error/ConsoleErrorPrinter.cpp.obj	bbac3185c3c9d7a3
 19	1918	7215360830478894	CMakeFiles/Maturski.dir/src/interpreter/Interpreter.cpp.obj	54327d55c8e9e4ec
 2	2200	7215360833294331	CMakeFiles/Maturski.dir/src/parser/Parser.cpp.obj	8e90ced4a8a6f33d
 2202	2357	7215360834844656	Maturski.exe	6de9969eb8fd40c3

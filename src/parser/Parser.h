@@ -54,6 +54,8 @@ private:
         return false;
     }
 
+    StmtPtr declaration();
+    StmtPtr varDeclarationStatement();
     StmtPtr statement();
     StmtPtr printStatement();
     StmtPtr expressionStatement();
