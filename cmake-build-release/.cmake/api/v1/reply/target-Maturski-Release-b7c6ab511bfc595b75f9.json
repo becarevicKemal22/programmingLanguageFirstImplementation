@@ -190,7 +190,9 @@
 				40,
 				41,
 				42,
-				43
+				43,
+				44,
+				45
 			]
 		}
 	],
@@ -422,6 +424,16 @@
 		{
 			"backtrace" : 1,
 			"path" : "src/error/exceptions/ConstReassignment.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/parser/ast/AssignmentExpression.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/error/exceptions/InvalidLValue.h",
 			"sourceGroupIndex" : 1
 		}
 	],

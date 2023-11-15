@@ -11,6 +11,7 @@
 
 namespace ast {
     typedef std::shared_ptr<Token> TokenPtr;
+
     class Expression : public Statement {
     public:
         Expression() : Statement() {}

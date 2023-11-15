@@ -159,7 +159,9 @@
 				12,
 				13,
 				14,
-				15
+				15,
+				16,
+				17
 			]
 		}
 	],
@@ -231,7 +233,9 @@
 				12,
 				13,
 				14,
-				15
+				15,
+				16,
+				17
 			]
 		},
 		{
@@ -337,6 +341,18 @@
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
 			"path" : "tests/EnvironmentTest.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "tests/ParserVarAssignmentTest.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "tests/InterpreterVarAssignmentTest.cpp",
 			"sourceGroupIndex" : 0
 		}
 	],

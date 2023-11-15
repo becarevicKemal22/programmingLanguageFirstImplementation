@@ -54,12 +54,15 @@ private:
         return false;
     }
 
+    std::shared_ptr<Token> getMostRelevantToken(ast::Expression* expr);
+
     StmtPtr declaration();
     StmtPtr varDeclarationStatement();
     StmtPtr statement();
     StmtPtr printStatement();
     StmtPtr expressionStatement();
     ExprPtr expression();
+    ExprPtr assignmentExpression();
     ExprPtr equalityExpression();
     ExprPtr comparisonExpression();
     ExprPtr additiveExpression();

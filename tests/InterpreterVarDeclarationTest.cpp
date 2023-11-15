@@ -50,7 +50,7 @@ TEST_CASE("Correctly declares variables", "[interpreter][variable][declaration]"
     }
 }
 
-TEST_CASE("Handles errors", "[interpreter][variable][declaration]"){
+TEST_CASE("Handles declaration errors", "[interpreter][variable][declaration]"){
     MockErrorPrinter printer;
     Parser parser(printer);
     Interpreter interpreter(printer);

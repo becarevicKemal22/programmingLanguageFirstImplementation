@@ -24,6 +24,7 @@ namespace ast {
     class ExprStatement;
     class PrintStatement;
     class VarDeclaration;
+    class AssignmentExpression;
 }
 
 class Interpreter {
@@ -44,6 +45,7 @@ public:
     RuntimeValuePtr visitGroupingExpression(const ast::GroupingExpression* expr);
     RuntimeValuePtr visitUnaryExpression(const ast::UnaryExpression* expr);
     RuntimeValuePtr visitBinaryExpression(const ast::BinaryExpression* expr);
+    RuntimeValuePtr visitAssignmentExpression(const ast::AssignmentExpression* expr);
     bool hadRuntimeError = false;
     Environment environment{};
 private:

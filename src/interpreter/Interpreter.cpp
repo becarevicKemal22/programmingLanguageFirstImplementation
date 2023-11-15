@@ -18,8 +18,10 @@
 #include "ExprStatement.h"
 #include "PrintStatement.h"
 #include "VarDeclaration.h"
+#include "AssignmentExpression.h"
 #include "exceptions/UndeclaredVariable.h"
 #include "exceptions/VariableRedeclaration.h"
+#include "exceptions/ConstReassignment.h"
 
 RuntimeValuePtr Interpreter::visitProgram(const ast::Program *program) {
     RuntimeValuePtr lastEvaluated = nullptr;
@@ -31,6 +33,10 @@ RuntimeValuePtr Interpreter::visitProgram(const ast::Program *program) {
             hadRuntimeError = true;
         }
         catch(VariableRedeclaration& e){
+            printer.highlightTokenError(*e.token, e.getMessage());
+            hadRuntimeError = true;
+        }
+        catch(ConstReassignment& e){
             printer.highlightTokenError(*e.token, e.getMessage());
             hadRuntimeError = true;
         }
@@ -241,6 +247,9 @@ Token Interpreter::getMostRelevantToken(ast::Expression* expr){
     if(auto literal = dynamic_cast<ast::Identifier*>(expr)){
         return *literal->token;
     }
+    if(auto literal = dynamic_cast<ast::AssignmentExpression*>(expr)){
+        return *literal->identifier;
+    }
     throw std::logic_error("Unknown expression type");
 }
 
@@ -282,4 +291,10 @@ RuntimeValuePtr Interpreter::visitVarDeclarationStatement(const ast::VarDeclarat
 
     environment.define(stmt->identifier, value, stmt->isConst);
     return std::make_shared<NullValue>();
+}
+
+RuntimeValuePtr Interpreter::visitAssignmentExpression(const ast::AssignmentExpression *expr) {
+    RuntimeValuePtr value = evaluate(expr->value.get());
+    environment.assign(expr->identifier, value);
+    return value;
 }

@@ -13,7 +13,9 @@
 #include "ExprStatement.h"
 #include "Expression.h"
 #include "VarDeclaration.h"
+#include "AssignmentExpression.h"
 #include "exceptions/UninitializedConst.h"
+#include "exceptions/InvalidLValue.h"
 
 ast::Program Parser::parse(const std::string &source) {
     ast::Program program;
@@ -26,6 +28,11 @@ ast::Program Parser::parse(const std::string &source) {
             printer.highlightTokenError(*e.token, e.getMessage());
             hadError = true;
             synchronize();
+        }
+        catch(InvalidLValue& e){
+            printer.highlightTokenError(*e.token, e.getMessage());
+            hadError = true;
+            // No sync is needed because an invalid lhs doesn't leave the parser in an invalid state, as the rest of the statement has been parsed correctly, so the parser can continue normally.
         }
         catch(std::runtime_error& e) {
             hadError = true;
@@ -94,7 +101,24 @@ StmtPtr Parser::expressionStatement(){
 }
 
 ExprPtr Parser::expression(){
-    return equalityExpression();
+    return assignmentExpression();
+}
+
+ExprPtr Parser::assignmentExpression() {
+    ExprPtr expr = equalityExpression();
+
+    if(atType(TokenType::Equal)){
+        std::shared_ptr<Token> equals = advance();
+        ExprPtr value = assignmentExpression();
+
+        std::shared_ptr<ast::Identifier> ident = std::dynamic_pointer_cast<ast::Identifier>(expr);
+        if(ident != nullptr){
+            std::shared_ptr<Token> identifier = ident->token;
+            return std::make_shared<ast::AssignmentExpression>(identifier, value);
+        }
+        throw InvalidLValue(getMostRelevantToken(expr.get()), "lvalue required as left operand of assignment");
+    }
+    return expr;
 }
 
 ExprPtr Parser::equalityExpression() {
@@ -198,4 +222,35 @@ void Parser::synchronize() {
                 advance();
         }
     }
+}
+
+std::shared_ptr<Token> Parser::getMostRelevantToken(ast::Expression* expr){
+    if(auto binaryExpr = dynamic_cast<ast::BinaryExpression*>(expr)){
+        return binaryExpr->_operator;
+    }
+    if(auto unaryExpr = dynamic_cast<ast::UnaryExpression*>(expr)){
+        return unaryExpr->_operator;
+    }
+    if(auto groupingExpr = dynamic_cast<ast::GroupingExpression*>(expr)){
+        return getMostRelevantToken(groupingExpr->expr.get());
+    }
+    if(auto literal = dynamic_cast<ast::NumericLiteral*>(expr)){
+        return literal->token;
+    }
+    if(auto literal = dynamic_cast<ast::BooleanLiteral*>(expr)){
+        return literal->token;
+    }
+    if(auto literal = dynamic_cast<ast::NullLiteral*>(expr)){
+        return literal->token;
+    }
+    if(auto literal = dynamic_cast<ast::StringLiteral*>(expr)){
+        return literal->token;
+    }
+    if(auto literal = dynamic_cast<ast::Identifier*>(expr)){
+        return literal->token;
+    }
+    if(auto literal = dynamic_cast<ast::AssignmentExpression*>(expr)){
+        return literal->identifier;
+    }
+    throw std::logic_error("Unknown expression type");
 }

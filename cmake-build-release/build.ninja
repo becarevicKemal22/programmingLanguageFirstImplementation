@@ -265,6 +265,20 @@ build tests/CMakeFiles/tests.dir/EnvironmentTest.cpp.obj: CXX_COMPILER__tests_Re
   OBJECT_DIR = tests\CMakeFiles\tests.dir
   OBJECT_FILE_DIR = tests\CMakeFiles\tests.dir
 
+build tests/CMakeFiles/tests.dir/ParserVarAssignmentTest.cpp.obj: CXX_COMPILER__tests_Release C$:/Users/kemal/CLionProjects/Maturski/tests/ParserVarAssignmentTest.cpp || cmake_object_order_depends_target_tests
+  DEP_FILE = tests\CMakeFiles\tests.dir\ParserVarAssignmentTest.cpp.obj.d
+  FLAGS = -O3 -DNDEBUG -fdiagnostics-color=always -std=gnu++20
+  INCLUDES = -IC:/Users/kemal/CLionProjects/Maturski/src/lexer -IC:/Users/kemal/CLionProjects/Maturski/src/error -IC:/Users/kemal/CLionProjects/Maturski/src/parser -IC:/Users/kemal/CLionProjects/Maturski/src/parser/ast -IC:/Users/kemal/CLionProjects/Maturski/src/parser/visitor -IC:/Users/kemal/CLionProjects/Maturski/src/interpreter -IC:/Users/kemal/CLionProjects/Maturski/src/interpreter/runtimeValues -IC:/Users/kemal/CLionProjects/Maturski/src/parser/ast/statements -IC:/Users/kemal/CLionProjects/Maturski/tests/lib/Catch2/src/catch2/.. -IC:/Users/kemal/CLionProjects/Maturski/cmake-build-release/tests/lib/Catch2/generated-includes
+  OBJECT_DIR = tests\CMakeFiles\tests.dir
+  OBJECT_FILE_DIR = tests\CMakeFiles\tests.dir
+
+build tests/CMakeFiles/tests.dir/InterpreterVarAssignmentTest.cpp.obj: CXX_COMPILER__tests_Release C$:/Users/kemal/CLionProjects/Maturski/tests/InterpreterVarAssignmentTest.cpp || cmake_object_order_depends_target_tests
+  DEP_FILE = tests\CMakeFiles\tests.dir\InterpreterVarAssignmentTest.cpp.obj.d
+  FLAGS = -O3 -DNDEBUG -fdiagnostics-color=always -std=gnu++20
+  INCLUDES = -IC:/Users/kemal/CLionProjects/Maturski/src/lexer -IC:/Users/kemal/CLionProjects/Maturski/src/error -IC:/Users/kemal/CLionProjects/Maturski/src/parser -IC:/Users/kemal/CLionProjects/Maturski/src/parser/ast -IC:/Users/kemal/CLionProjects/Maturski/src/parser/visitor -IC:/Users/kemal/CLionProjects/Maturski/src/interpreter -IC:/Users/kemal/CLionProjects/Maturski/src/interpreter/runtimeValues -IC:/Users/kemal/CLionProjects/Maturski/src/parser/ast/statements -IC:/Users/kemal/CLionProjects/Maturski/tests/lib/Catch2/src/catch2/.. -IC:/Users/kemal/CLionProjects/Maturski/cmake-build-release/tests/lib/Catch2/generated-includes
+  OBJECT_DIR = tests\CMakeFiles\tests.dir
+  OBJECT_FILE_DIR = tests\CMakeFiles\tests.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target tests
@@ -273,7 +287,7 @@ build tests/CMakeFiles/tests.dir/EnvironmentTest.cpp.obj: CXX_COMPILER__tests_Re
 #############################################
 # Link the executable tests\tests.exe
 
-build tests/tests.exe: CXX_EXECUTABLE_LINKER__tests_Release tests/CMakeFiles/tests.dir/LexerTest.cpp.obj tests/CMakeFiles/tests.dir/__/src/error/ErrorPrinter.cpp.obj tests/CMakeFiles/tests.dir/__/src/lexer/Lexer.cpp.obj tests/CMakeFiles/tests.dir/__/src/error/MockErrorPrinter.cpp.obj tests/CMakeFiles/tests.dir/ParserTest.cpp.obj tests/CMakeFiles/tests.dir/__/src/parser/Parser.cpp.obj tests/CMakeFiles/tests.dir/__/src/interpreter/Interpreter.cpp.obj tests/CMakeFiles/tests.dir/__/src/interpreter/runtimeValues/ValueType.cpp.obj tests/CMakeFiles/tests.dir/__/src/interpreter/Environment.cpp.obj tests/CMakeFiles/tests.dir/InterpreterLiteralTest.cpp.obj tests/CMakeFiles/tests.dir/InterpreterUnaryTest.cpp.obj tests/CMakeFiles/tests.dir/InterpreterBinaryExpressionTest.cpp.obj tests/CMakeFiles/tests.dir/ParserVarDeclarationTest.cpp.obj tests/CMakeFiles/tests.dir/InterpreterVarDeclarationTest.cpp.obj tests/CMakeFiles/tests.dir/EnvironmentTest.cpp.obj | tests/lib/Catch2/src/libCatch2Main.a tests/lib/Catch2/src/libCatch2.a || tests/lib/Catch2/src/libCatch2.a tests/lib/Catch2/src/libCatch2Main.a
+build tests/tests.exe: CXX_EXECUTABLE_LINKER__tests_Release tests/CMakeFiles/tests.dir/LexerTest.cpp.obj tests/CMakeFiles/tests.dir/__/src/error/ErrorPrinter.cpp.obj tests/CMakeFiles/tests.dir/__/src/lexer/Lexer.cpp.obj tests/CMakeFiles/tests.dir/__/src/error/MockErrorPrinter.cpp.obj tests/CMakeFiles/tests.dir/ParserTest.cpp.obj tests/CMakeFiles/tests.dir/__/src/parser/Parser.cpp.obj tests/CMakeFiles/tests.dir/__/src/interpreter/Interpreter.cpp.obj tests/CMakeFiles/tests.dir/__/src/interpreter/runtimeValues/ValueType.cpp.obj tests/CMakeFiles/tests.dir/__/src/interpreter/Environment.cpp.obj tests/CMakeFiles/tests.dir/InterpreterLiteralTest.cpp.obj tests/CMakeFiles/tests.dir/InterpreterUnaryTest.cpp.obj tests/CMakeFiles/tests.dir/InterpreterBinaryExpressionTest.cpp.obj tests/CMakeFiles/tests.dir/ParserVarDeclarationTest.cpp.obj tests/CMakeFiles/tests.dir/InterpreterVarDeclarationTest.cpp.obj tests/CMakeFiles/tests.dir/EnvironmentTest.cpp.obj tests/CMakeFiles/tests.dir/ParserVarAssignmentTest.cpp.obj tests/CMakeFiles/tests.dir/InterpreterVarAssignmentTest.cpp.obj | tests/lib/Catch2/src/libCatch2Main.a tests/lib/Catch2/src/libCatch2.a || tests/lib/Catch2/src/libCatch2.a tests/lib/Catch2/src/libCatch2Main.a
   FLAGS = -O3 -DNDEBUG
   LINK_LIBRARIES = tests/lib/Catch2/src/libCatch2Main.a  tests/lib/Catch2/src/libCatch2.a  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = tests\CMakeFiles\tests.dir

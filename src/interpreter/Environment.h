@@ -31,6 +31,15 @@ public:
      * @throws UndeclaredVariable Throws if provided an identifier of a non-existing variable
      */
     RuntimeValuePtr get(std::shared_ptr<Token> name);
+
+    /**
+     * Assigns a value to an existing variable
+     * @param name shared_ptr<Token> pointer that holds the identifier of the variable
+     * @param value shared_ptr<RuntimeValue> pointer that holds the value to be for assignment
+     * @throws UndeclaredVariable Throws if provided an identifier of a non-existing variable
+     * @throws ConstReassignment Throws if assign is called on a constant variable
+     */
+    void assign(std::shared_ptr<Token> name, RuntimeValuePtr value);
 };
 
 
