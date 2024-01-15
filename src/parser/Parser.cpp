@@ -13,6 +13,7 @@
 #include "ExprStatement.h"
 #include "Expression.h"
 #include "VarDeclaration.h"
+#include "LogicalExpression.h"
 #include "AssignmentExpression.h"
 #include "BlockStatement.h"
 #include "IfStatement.h"
@@ -152,7 +153,7 @@ ExprPtr Parser::expression(){
 }
 
 ExprPtr Parser::assignmentExpression() {
-    ExprPtr expr = equalityExpression();
+    ExprPtr expr = orExpression();
 
     if(atType(TokenType::Equal)){
         std::shared_ptr<Token> equals = advance();
@@ -164,6 +165,26 @@ ExprPtr Parser::assignmentExpression() {
             return std::make_shared<ast::AssignmentExpression>(identifier, value);
         }
         throw InvalidLValue(getMostRelevantToken(expr.get()), "lvalue required as left operand of assignment");
+    }
+    return expr;
+}
+
+ExprPtr Parser::orExpression() {
+    ExprPtr expr = andExpression();
+    while(atType(TokenType::LogicalOr)){
+        std::shared_ptr<Token> _operator = advance();
+        ExprPtr right = andExpression();
+        expr = std::make_shared<ast::LogicalExpression>(expr, _operator, right);
+    }
+    return expr;
+}
+
+ExprPtr Parser::andExpression() {
+    ExprPtr expr = equalityExpression();
+    while(atType(TokenType::LogicalAnd)){
+        std::shared_ptr<Token> _operator = advance();
+        ExprPtr right = equalityExpression();
+        expr = std::make_shared<ast::LogicalExpression>(expr, _operator, right);
     }
     return expr;
 }

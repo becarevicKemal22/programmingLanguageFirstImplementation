@@ -64,6 +64,8 @@ private:
     StmtPtr expressionStatement();
     ExprPtr expression();
     ExprPtr assignmentExpression();
+    ExprPtr orExpression();
+    ExprPtr andExpression();
     ExprPtr equalityExpression();
     ExprPtr comparisonExpression();
     ExprPtr additiveExpression();

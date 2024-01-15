@@ -21,6 +21,7 @@
 #include "AssignmentExpression.h"
 #include "BlockStatement.h"
 #include "IfStatement.h"
+#include "LogicalExpression.h"
 #include "exceptions/UndeclaredVariable.h"
 #include "exceptions/VariableRedeclaration.h"
 #include "exceptions/ConstReassignment.h"
@@ -320,13 +321,24 @@ RuntimeValuePtr Interpreter::visitIfStatement(const ast::IfStatement *stmt) {
     return std::make_shared<NullValue>();
 }
 
+RuntimeValuePtr Interpreter::visitLogicalExpression(const ast::LogicalExpression *expr) {
+    RuntimeValuePtr left = evaluate(expr->left.get());
 
-void Interpreter::executeBlock(std::vector<std::shared_ptr<ast::Statement>> statements){
+    if(expr->_operator->type == TokenType::LogicalOr){
+        if(isTruthy(left)) return left;
+    }else{
+        if(!isTruthy(left)) return left;
+    }
+
+    return evaluate(expr->right.get());
+}
+
+void Interpreter::executeBlock(std::vector<std::shared_ptr<ast::Statement>> statements) {
     std::shared_ptr<Environment> env = std::make_shared<Environment>(this->environment);
     std::shared_ptr<Environment> previous = this->environment;
 
     this->environment = env;
-    for(auto stmt : statements){
+    for (auto stmt: statements) {
         execute(stmt.get());
     }
     this->environment = previous;

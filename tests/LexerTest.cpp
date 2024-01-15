@@ -15,11 +15,11 @@ void checkTypeAndContent(const Lexer &lexer, int index, TokenType type, std::str
 }
 
 TEST_CASE("Returns correct token", "[Lexer]") {
-    std::string source = "(){}[]+-*/;:.,= ==!!= < <= > >=%";
+    std::string source = "(){}[]+-*/;:.,= ==!!= < <= > >=%||&&";
     MockErrorPrinter printer;
     Lexer lexer(source);
     lexer.tokenize(printer);
-    CHECK(lexer.tokens.size() == 24);
+    CHECK(lexer.tokens.size() == 26);
 
     checkTypeAndContent(lexer, 0, TokenType::OpenParen, "(");
     checkTypeAndContent(lexer, 1, TokenType::ClosedParen, ")");
@@ -44,7 +44,9 @@ TEST_CASE("Returns correct token", "[Lexer]") {
     checkTypeAndContent(lexer, 20, TokenType::Greater, ">");
     checkTypeAndContent(lexer, 21, TokenType::GreaterEqual, ">=");
     checkTypeAndContent(lexer, 22, TokenType::Percent, "%");
-    checkTypeAndContent(lexer, 23, TokenType::Eof, "");
+    checkTypeAndContent(lexer, 23, TokenType::LogicalOr, "||");
+    checkTypeAndContent(lexer, 24, TokenType::LogicalAnd, "&&");
+    checkTypeAndContent(lexer, 25, TokenType::Eof, "");
 }
 
 TEST_CASE("Ignores commments", "[Lexer]") {

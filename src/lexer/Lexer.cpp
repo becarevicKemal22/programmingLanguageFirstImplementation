@@ -96,7 +96,29 @@ std::vector<Token> Lexer::tokenize(ErrorPrinter& printer) {
                 pushToken(TokenType::Greater, ">");
             }
             advance();
-        } else if(c == '"'){
+        } else if(c == '|'){
+            if(peek() == '|'){
+                pushToken(TokenType::LogicalOr, "||");
+                advance();
+            } else{
+                std::string message = "Unexpected token '|' found. Did you mean '||'?";
+                printer.printLexerError(line, charIndexOnLine, message);
+                throw std::runtime_error(message);
+            }
+            advance();
+        } else if(c == '&'){
+            if(peek() == '&'){
+                pushToken(TokenType::LogicalAnd, "&&");
+                advance();
+            } else{
+                std::string message = "Unexpected token '&' found. Did you mean '&&'?";
+                printer.printLexerError(line, charIndexOnLine, message);
+                throw std::runtime_error(message);
+            }
+            advance();
+        }
+
+        else if(c == '"'){
             handleString(printer);
         } else if (c == '\n' || c == '\r') {
             newLine();

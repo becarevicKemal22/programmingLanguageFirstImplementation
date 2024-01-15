@@ -27,6 +27,7 @@ namespace ast {
     class AssignmentExpression;
     class BlockStatement;
     class IfStatement;
+    class LogicalExpression;
 }
 
 class Interpreter {
@@ -54,6 +55,7 @@ public:
     RuntimeValuePtr visitUnaryExpression(const ast::UnaryExpression* expr);
     RuntimeValuePtr visitBinaryExpression(const ast::BinaryExpression* expr);
     RuntimeValuePtr visitAssignmentExpression(const ast::AssignmentExpression* expr);
+    RuntimeValuePtr visitLogicalExpression(const ast::LogicalExpression* expr);
     bool hadRuntimeError = false;
     std::shared_ptr<Environment> environment;
 private:

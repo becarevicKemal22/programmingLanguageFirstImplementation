@@ -11,7 +11,7 @@ enum class TokenType{
     Var, Konst, Ako, Inace, Onda, Dok, Print, Identifikator, Broj, String, Prazno, Tacno, Netacno,
     Plus, Minus, Star, Slash, Percent,
     Semicolon, Colon, Comma, Dot, Bang, BangEqual, Less, LessEqual, Greater, GreaterEqual,
-    Equal, DoubleEqual
+    Equal, DoubleEqual, LogicalOr, LogicalAnd,
 };
 
 #endif //MATURSKI_TOKENTYPE_H

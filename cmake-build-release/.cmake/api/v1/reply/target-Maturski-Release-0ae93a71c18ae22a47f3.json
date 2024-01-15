@@ -195,7 +195,8 @@
 				45,
 				46,
 				47,
-				48
+				48,
+				49
 			]
 		}
 	],
@@ -452,6 +453,11 @@
 		{
 			"backtrace" : 1,
 			"path" : "src/parser/ast/statements/IfStatement.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/parser/ast/LogicalExpression.h",
 			"sourceGroupIndex" : 1
 		}
 	],
