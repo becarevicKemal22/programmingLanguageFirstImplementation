@@ -10,7 +10,6 @@
 #include <memory>
 #include "Token.h"
 
-
 class UndeclaredVariable : public std::exception {
     std::string message;
 public:

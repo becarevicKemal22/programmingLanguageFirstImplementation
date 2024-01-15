@@ -14,6 +14,9 @@
 #include "Expression.h"
 #include "VarDeclaration.h"
 #include "AssignmentExpression.h"
+#include "BlockStatement.h"
+#include "IfStatement.h"
+#include "exceptions/ExpectedXBeforeY.h"
 #include "exceptions/UninitializedConst.h"
 #include "exceptions/InvalidLValue.h"
 
@@ -33,6 +36,10 @@ ast::Program Parser::parse(const std::string &source) {
             printer.highlightTokenError(*e.token, e.getMessage());
             hadError = true;
             // No sync is needed because an invalid lhs doesn't leave the parser in an invalid state, as the rest of the statement has been parsed correctly, so the parser can continue normally.
+        }
+        catch(ExpectedXBeforeY& e){
+            printer.expectedXBeforeY(e.previousToken, e.expectedWhat, e.afterToken, e.beforeWhat);
+            hadError = true;
         }
         catch(std::runtime_error& e) {
             hadError = true;
@@ -78,7 +85,47 @@ std::shared_ptr<ast::Statement> Parser::statement(){
     if(atType(TokenType::Print)){
         return printStatement();
     }
+    if(atType(TokenType::Ako)){
+        return ifStatement();
+    }
+    if(atType(TokenType::Inace)){
+        printer.highlightTokenError(at(), "Expected 'ako' before 'inace'");
+        throw std::runtime_error("Parser error.");
+    }
+    if(atType(TokenType::OpenBrace)){
+        return std::make_shared<ast::BlockStatement>(block());
+    }
     return expressionStatement();
+}
+
+std::shared_ptr<ast::Statement> Parser::ifStatement() {
+    advance();
+    ExprPtr condition = expression();
+    if(!consume(TokenType::Onda)){
+        throw ExpectedXBeforeY(previous(), "onda", at(), at().value);
+    }
+
+    StmtPtr thenBranch = statement();
+    StmtPtr elseBranch = nullptr;
+    if(atType(TokenType::Inace)){
+        advance();
+        elseBranch = statement();
+    }
+
+    return std::make_shared<ast::IfStatement>(condition, thenBranch, elseBranch);
+}
+
+std::vector<std::shared_ptr<ast::Statement>> Parser::block(){
+    advance();
+    std::vector<std::shared_ptr<ast::Statement>> statements{};
+    while(!atType(TokenType::ClosedBrace) && !atType(TokenType::Eof)){
+        statements.push_back(declaration());
+    }
+
+    if(!consume(TokenType::ClosedBrace)){
+        throw ExpectedXBeforeY(previous(), "}", at(), at().value);
+    }
+    return statements;
 }
 
 StmtPtr Parser::printStatement(){
@@ -134,7 +181,6 @@ ExprPtr Parser::equalityExpression() {
 
 ExprPtr Parser::comparisonExpression() {
     ExprPtr expr = additiveExpression();
-
     while(match({TokenType::Greater, TokenType::GreaterEqual, TokenType::Less, TokenType::LessEqual})){
         std::shared_ptr<Token> op = advance();
         ExprPtr right = additiveExpression();

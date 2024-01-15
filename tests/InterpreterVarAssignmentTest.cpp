@@ -18,8 +18,8 @@ TEST_CASE("Correctly assigns variables") {
     std::string source = "var a = 5; a = 10;";
     ast::Program program = parser.parse(source);
     interpreter.visitProgram(&program);
-    auto it = interpreter.environment.variables.find("a");
-    REQUIRE(it != interpreter.environment.variables.end());
+    auto it = interpreter.environment->variables.find("a");
+    REQUIRE(it != interpreter.environment->variables.end());
     REQUIRE(it->second.second == false);
     std::shared_ptr<NumericValue> value = std::dynamic_pointer_cast<NumericValue>(it->second.first);
     REQUIRE(value);

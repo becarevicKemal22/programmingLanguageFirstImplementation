@@ -25,16 +25,24 @@ namespace ast {
     class PrintStatement;
     class VarDeclaration;
     class AssignmentExpression;
+    class BlockStatement;
+    class IfStatement;
 }
 
 class Interpreter {
 public:
-    Interpreter(ErrorPrinter& printer) : printer(printer) {};
+    Interpreter(ErrorPrinter& printer) : printer(printer) {
+        environment = std::make_shared<Environment>();
+    };
+    RuntimeValuePtr execute(const ast::Statement* statement);
     RuntimeValuePtr visitProgram(const ast::Program* stmt);
     RuntimeValuePtr visitStatement(const ast::Statement* stmt);
     RuntimeValuePtr visitExprStatement(const ast::ExprStatement* stmt);
     RuntimeValuePtr visitPrintStatement(const ast::PrintStatement* stmt);
     RuntimeValuePtr visitVarDeclarationStatement(const ast::VarDeclaration* stmt);
+    RuntimeValuePtr visitBlockStatement(const ast::BlockStatement* stmt);
+    RuntimeValuePtr visitIfStatement(const ast::IfStatement* stmt);
+    void executeBlock(std::vector<std::shared_ptr<ast::Statement>> statements);
 
     RuntimeValuePtr visitExpression(const ast::Expression* expr);
     RuntimeValuePtr visitNumericLiteral(const ast::NumericLiteral* expr);
@@ -47,7 +55,7 @@ public:
     RuntimeValuePtr visitBinaryExpression(const ast::BinaryExpression* expr);
     RuntimeValuePtr visitAssignmentExpression(const ast::AssignmentExpression* expr);
     bool hadRuntimeError = false;
-    Environment environment{};
+    std::shared_ptr<Environment> environment;
 private:
     ErrorPrinter& printer;
     RuntimeValuePtr evaluate(ast::Expression* expr);

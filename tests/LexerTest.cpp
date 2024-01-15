@@ -133,7 +133,7 @@ TEST_CASE("Correctly tokenizes identifiers", "[Lexer]") {
 }
 
 TEST_CASE("Correctly tokenizes keywords", "[Lexer]") {
-    std::string source = "var konst ako dok prazno tacno netacno print";
+    std::string source = "var konst ako inace dok prazno tacno netacno print onda";
     MockErrorPrinter printer;
     Lexer lexer(source);
     try {
@@ -142,15 +142,20 @@ TEST_CASE("Correctly tokenizes keywords", "[Lexer]") {
         std::cout << err.what() << "\n";
     }
 
-    REQUIRE(lexer.tokens.size() == 9);
+    REQUIRE(lexer.tokens.size() == 11);
     checkTypeAndContent(lexer, 0, TokenType::Var, "var");
     checkTypeAndContent(lexer, 1, TokenType::Konst, "konst");
     checkTypeAndContent(lexer, 2, TokenType::Ako, "ako");
-    checkTypeAndContent(lexer, 3, TokenType::Dok, "dok");
-    checkTypeAndContent(lexer, 4, TokenType::Prazno, "prazno");
-    checkTypeAndContent(lexer, 5, TokenType::Tacno, "tacno");
-    checkTypeAndContent(lexer, 6, TokenType::Netacno, "netacno");
-    checkTypeAndContent(lexer, 7, TokenType::Print, "print");
+    checkTypeAndContent(lexer, 3, TokenType::Inace, "inace");
+    checkTypeAndContent(lexer, 4, TokenType::Dok, "dok");
+    checkTypeAndContent(lexer, 5, TokenType::Prazno, "prazno");
+    checkTypeAndContent(lexer, 6, TokenType::Tacno, "tacno");
+    checkTypeAndContent(lexer, 7, TokenType::Netacno, "netacno");
+    checkTypeAndContent(lexer, 8, TokenType::Print, "print");
+    checkTypeAndContent(lexer, 9, TokenType::Onda, "onda");
+//    checkTypeAndContent(lexer, 10, TokenType::Print, "ili");
+//    checkTypeAndContent(lexer, 11, TokenType::Print, "u");
+//    checkTypeAndContent(lexer, 12, TokenType::Print, "protivnom");
 }
 
 TEST_CASE("Tokenizes strings", "[Lexer]"){

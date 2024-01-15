@@ -192,7 +192,10 @@
 				42,
 				43,
 				44,
-				45
+				45,
+				46,
+				47,
+				48
 			]
 		}
 	],
@@ -434,6 +437,21 @@
 		{
 			"backtrace" : 1,
 			"path" : "src/error/exceptions/InvalidLValue.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/parser/ast/statements/BlockStatement.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/error/exceptions/ExpectedXBeforeY.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/parser/ast/statements/IfStatement.h",
 			"sourceGroupIndex" : 1
 		}
 	],

@@ -24,16 +24,22 @@ void Environment::define(std::shared_ptr<Token> name, RuntimeValuePtr value, boo
 
 RuntimeValuePtr Environment::get(std::shared_ptr<Token> name){
     auto it = variables.find(name->value);
-    if(it != variables.end()){
+    if(it != variables.end()) {
         return it->second.first;
     }
-    std::string message = "Use of undeclared identifier '" + name->value + "'";
-    throw UndeclaredVariable(name, message);
+    else if(parent != nullptr) {
+        return parent->get(name);
+    }
+    throw UndeclaredVariable(name, "Use of undeclared identifier '" + name->value + "'");
 }
 
 void Environment::assign(std::shared_ptr<Token> name, RuntimeValuePtr value) {
     auto it = variables.find(name->value);
     if(it == variables.end()){
+        if(parent != nullptr){
+            parent->assign(name, value);
+            return;
+        }
         throw UndeclaredVariable(name, "Use of undeclared identifier '" + name->value + "'");
     }
     if(it->second.second){

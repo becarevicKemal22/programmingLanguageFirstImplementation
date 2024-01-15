@@ -13,6 +13,8 @@ const std::unordered_map<std::string, TokenType> KEYWORDS = {
         {"var", TokenType::Var},
         {"konst", TokenType::Konst},
         {"ako", TokenType::Ako},
+        {"inace", TokenType::Inace},
+        {"onda", TokenType::Onda},
         {"dok", TokenType::Dok},
         {"prazno", TokenType::Prazno},
         {"tacno", TokenType::Tacno},

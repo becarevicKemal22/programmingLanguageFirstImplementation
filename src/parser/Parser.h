@@ -60,6 +60,7 @@ private:
     StmtPtr varDeclarationStatement();
     StmtPtr statement();
     StmtPtr printStatement();
+    StmtPtr ifStatement();
     StmtPtr expressionStatement();
     ExprPtr expression();
     ExprPtr assignmentExpression();
@@ -70,6 +71,7 @@ private:
     ExprPtr unaryExpression();
     ExprPtr primaryExpression();
     void synchronize();
+    std::vector<std::shared_ptr<ast::Statement>> block();
 };
 
 

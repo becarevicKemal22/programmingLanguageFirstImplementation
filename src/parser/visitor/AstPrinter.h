@@ -13,6 +13,8 @@
 #include "NumericLiteral.h"
 #include "Identifier.h"
 
+// AST PRINTER AND VISITOR CLASSES ARE NOT IN USE. DO NOT MODIFY.
+
 using std::cout;
 
 class AstPrinter : public Visitor {

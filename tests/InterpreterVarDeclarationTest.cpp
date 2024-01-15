@@ -20,8 +20,8 @@ TEST_CASE("Correctly declares variables", "[interpreter][variable][declaration]"
         std::string source = "var a = 5;";
         ast::Program program = parser.parse(source);
         interpreter.visitProgram(&program);
-        auto it = interpreter.environment.variables.find("a");
-        REQUIRE(it != interpreter.environment.variables.end());
+        auto it = interpreter.environment->variables.find("a");
+        REQUIRE(it != interpreter.environment->variables.end());
         REQUIRE(it->second.second == false);
         std::shared_ptr<NumericValue> value = std::dynamic_pointer_cast<NumericValue>(it->second.first);
         REQUIRE(value);
@@ -31,8 +31,8 @@ TEST_CASE("Correctly declares variables", "[interpreter][variable][declaration]"
         std::string source = "var a;";
         ast::Program program = parser.parse(source);
         interpreter.visitProgram(&program);
-        auto it = interpreter.environment.variables.find("a");
-        REQUIRE(it != interpreter.environment.variables.end());
+        auto it = interpreter.environment->variables.find("a");
+        REQUIRE(it != interpreter.environment->variables.end());
         REQUIRE(it->second.second == false);
         std::shared_ptr<NullValue> value = std::dynamic_pointer_cast<NullValue>(it->second.first);
         REQUIRE(value);
@@ -41,8 +41,8 @@ TEST_CASE("Correctly declares variables", "[interpreter][variable][declaration]"
         std::string source = "konst a = 5;";
         ast::Program program = parser.parse(source);
         interpreter.visitProgram(&program);
-        auto it = interpreter.environment.variables.find("a");
-        REQUIRE(it != interpreter.environment.variables.end());
+        auto it = interpreter.environment->variables.find("a");
+        REQUIRE(it != interpreter.environment->variables.end());
         REQUIRE(it->second.second == true);
         std::shared_ptr<NumericValue> value = std::dynamic_pointer_cast<NumericValue>(it->second.first);
         REQUIRE(value);
@@ -63,7 +63,8 @@ TEST_CASE("Handles declaration errors", "[interpreter][variable][declaration]"){
     SECTION("Handles undefined identifiers"){
         std::string source = "print a;";
         ast::Program program = parser.parse(source);
-        REQUIRE_NOTHROW(interpreter.visitProgram(&program));
+        interpreter.visitProgram(&program);
+//        REQUIRE_NOTHROW(interpreter.visitProgram(&program));
         REQUIRE(printer.numberOfTimesCalled);
     }
 }

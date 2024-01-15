@@ -23,5 +23,4 @@ public:
     }
 };
 
-
 #endif //MATURSKI_VARIABLEREDECLARATION_H

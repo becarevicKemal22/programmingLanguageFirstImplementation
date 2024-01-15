@@ -5,6 +5,8 @@
 #ifndef MATURSKI_VISITOR_H
 #define MATURSKI_VISITOR_H
 
+// AST PRINTER AND VISITOR CLASSES ARE NOT IN USE. DO NOT MODIFY.
+
 namespace ast{
     class Statement;
     class Expression;

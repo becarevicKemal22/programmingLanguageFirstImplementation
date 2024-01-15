@@ -19,6 +19,8 @@
 #include "PrintStatement.h"
 #include "VarDeclaration.h"
 #include "AssignmentExpression.h"
+#include "BlockStatement.h"
+#include "IfStatement.h"
 #include "exceptions/UndeclaredVariable.h"
 #include "exceptions/VariableRedeclaration.h"
 #include "exceptions/ConstReassignment.h"
@@ -26,29 +28,34 @@
 RuntimeValuePtr Interpreter::visitProgram(const ast::Program *program) {
     RuntimeValuePtr lastEvaluated = nullptr;
     for (auto statement : program->body) {
-        try{
-            lastEvaluated = statement->accept(this);
-        }catch(UndeclaredVariable& e){
-            printer.highlightTokenError(*e.token, e.getMessage());
-            hadRuntimeError = true;
-        }
-        catch(VariableRedeclaration& e){
-            printer.highlightTokenError(*e.token, e.getMessage());
-            hadRuntimeError = true;
-        }
-        catch(ConstReassignment& e){
-            printer.highlightTokenError(*e.token, e.getMessage());
-            hadRuntimeError = true;
-        }
-        catch(std::exception& e){
-            std::cout << "INTERNAL ERROR: " << e.what() << std::endl;
-            hadRuntimeError = true;
-        }
+        lastEvaluated = execute(statement.get());
     }
     if(!lastEvaluated){
         return std::make_shared<NullValue>();
     }
     return lastEvaluated;
+}
+
+RuntimeValuePtr Interpreter::execute(const ast::Statement* statement) {
+    try{
+        return statement->accept(this);
+    }catch(UndeclaredVariable& e){
+        printer.highlightTokenError(*e.token, e.getMessage());
+        hadRuntimeError = true;
+    }
+    catch(VariableRedeclaration& e){
+        printer.highlightTokenError(*e.token, e.getMessage());
+        hadRuntimeError = true;
+    }
+    catch(ConstReassignment& e){
+        printer.highlightTokenError(*e.token, e.getMessage());
+        hadRuntimeError = true;
+    }
+    catch(std::exception& e){
+        std::cout << "INTERNAL ERROR: " << e.what() << std::endl;
+        hadRuntimeError = true;
+    }
+    return nullptr;
 }
 
 RuntimeValuePtr Interpreter::visitStatement(const ast::Statement *expr) {
@@ -76,7 +83,7 @@ RuntimeValuePtr Interpreter::visitNullLiteral(const ast::NullLiteral *expr) {
 }
 
 RuntimeValuePtr Interpreter::visitIdentifierExpression(const ast::Identifier* expr){
-   return environment.get(expr->token);
+   return environment->get(expr->token);
 }
 
 RuntimeValuePtr Interpreter::visitGroupingExpression(const ast::GroupingExpression *expr) {
@@ -289,12 +296,38 @@ RuntimeValuePtr Interpreter::visitVarDeclarationStatement(const ast::VarDeclarat
         value = evaluate(stmt->initializer.get());
     }
 
-    environment.define(stmt->identifier, value, stmt->isConst);
+    environment->define(stmt->identifier, value, stmt->isConst);
     return std::make_shared<NullValue>();
 }
 
 RuntimeValuePtr Interpreter::visitAssignmentExpression(const ast::AssignmentExpression *expr) {
     RuntimeValuePtr value = evaluate(expr->value.get());
-    environment.assign(expr->identifier, value);
+    environment->assign(expr->identifier, value);
     return value;
+}
+
+RuntimeValuePtr Interpreter::visitBlockStatement(const ast::BlockStatement *stmt) {
+    executeBlock(stmt->statements);
+    return std::make_shared<NullValue>();
+}
+
+RuntimeValuePtr Interpreter::visitIfStatement(const ast::IfStatement *stmt) {
+    if(isTruthy(evaluate(stmt->condition.get()))){
+        execute(stmt->thenBranch.get());
+    } else if (stmt->elseBranch != nullptr){
+        execute(stmt->elseBranch.get());
+    }
+    return std::make_shared<NullValue>();
+}
+
+
+void Interpreter::executeBlock(std::vector<std::shared_ptr<ast::Statement>> statements){
+    std::shared_ptr<Environment> env = std::make_shared<Environment>(this->environment);
+    std::shared_ptr<Environment> previous = this->environment;
+
+    this->environment = env;
+    for(auto stmt : statements){
+        execute(stmt.get());
+    }
+    this->environment = previous;
 }
