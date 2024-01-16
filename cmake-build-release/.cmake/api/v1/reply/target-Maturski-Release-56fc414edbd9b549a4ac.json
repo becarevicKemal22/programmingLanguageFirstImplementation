@@ -196,7 +196,8 @@
 				46,
 				47,
 				48,
-				49
+				49,
+				50
 			]
 		}
 	],
@@ -458,6 +459,11 @@
 		{
 			"backtrace" : 1,
 			"path" : "src/parser/ast/LogicalExpression.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/parser/ast/statements/WhileStatement.h",
 			"sourceGroupIndex" : 1
 		}
 	],

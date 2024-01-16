@@ -27,6 +27,7 @@ namespace ast {
     class AssignmentExpression;
     class BlockStatement;
     class IfStatement;
+    class WhileStatement;
     class LogicalExpression;
 }
 
@@ -43,6 +44,7 @@ public:
     RuntimeValuePtr visitVarDeclarationStatement(const ast::VarDeclaration* stmt);
     RuntimeValuePtr visitBlockStatement(const ast::BlockStatement* stmt);
     RuntimeValuePtr visitIfStatement(const ast::IfStatement* stmt);
+    RuntimeValuePtr visitWhileStatement(const ast::WhileStatement* stmt);
     void executeBlock(std::vector<std::shared_ptr<ast::Statement>> statements);
 
     RuntimeValuePtr visitExpression(const ast::Expression* expr);

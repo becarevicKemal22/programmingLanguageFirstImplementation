@@ -21,6 +21,7 @@
 #include "AssignmentExpression.h"
 #include "BlockStatement.h"
 #include "IfStatement.h"
+#include "WhileStatement.h"
 #include "LogicalExpression.h"
 #include "exceptions/UndeclaredVariable.h"
 #include "exceptions/VariableRedeclaration.h"
@@ -320,6 +321,14 @@ RuntimeValuePtr Interpreter::visitIfStatement(const ast::IfStatement *stmt) {
     }
     return std::make_shared<NullValue>();
 }
+
+RuntimeValuePtr Interpreter::visitWhileStatement(const ast::WhileStatement *stmt) {
+    while(isTruthy(evaluate(stmt->condition.get()))){
+        execute(stmt->body.get());
+    }
+    return std::make_shared<NullValue>();
+}
+
 
 RuntimeValuePtr Interpreter::visitLogicalExpression(const ast::LogicalExpression *expr) {
     RuntimeValuePtr left = evaluate(expr->left.get());

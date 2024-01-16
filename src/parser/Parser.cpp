@@ -17,6 +17,7 @@
 #include "AssignmentExpression.h"
 #include "BlockStatement.h"
 #include "IfStatement.h"
+#include "WhileStatement.h"
 #include "exceptions/ExpectedXBeforeY.h"
 #include "exceptions/UninitializedConst.h"
 #include "exceptions/InvalidLValue.h"
@@ -93,6 +94,9 @@ std::shared_ptr<ast::Statement> Parser::statement(){
         printer.highlightTokenError(at(), "Expected 'ako' before 'inace'");
         throw std::runtime_error("Parser error.");
     }
+    if(atType(TokenType::Dok)){
+        return whileStatement();
+    }
     if(atType(TokenType::OpenBrace)){
         return std::make_shared<ast::BlockStatement>(block());
     }
@@ -114,6 +118,19 @@ std::shared_ptr<ast::Statement> Parser::ifStatement() {
     }
 
     return std::make_shared<ast::IfStatement>(condition, thenBranch, elseBranch);
+}
+
+std::shared_ptr<ast::Statement> Parser::whileStatement() {
+    advance();
+    if(!consume(TokenType::OpenParen)){
+        throw ExpectedXBeforeY(previous(), "(", at(), at().value);
+    }
+    ExprPtr condition = expression();
+    if(!consume(TokenType::ClosedParen)){
+        throw ExpectedXBeforeY(previous(), ")", at(), at().value);
+    }
+    StmtPtr body = statement();
+    return std::make_shared<ast::WhileStatement>(condition, body);
 }
 
 std::vector<std::shared_ptr<ast::Statement>> Parser::block(){

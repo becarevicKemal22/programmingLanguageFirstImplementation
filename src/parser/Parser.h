@@ -61,6 +61,7 @@ private:
     StmtPtr statement();
     StmtPtr printStatement();
     StmtPtr ifStatement();
+    StmtPtr whileStatement();
     StmtPtr expressionStatement();
     ExprPtr expression();
     ExprPtr assignmentExpression();
