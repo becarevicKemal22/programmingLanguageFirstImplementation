@@ -38,3 +38,18 @@ TEST_CASE("Doesn't run loop on initial false condition", "[interpreter][conditio
     std::shared_ptr<NumericValue> value = std::dynamic_pointer_cast<NumericValue>(a->second.first);
     REQUIRE(value->value == 0);
 }
+
+TEST_CASE("Runs for loop correctly"){
+    MockErrorPrinter printer;
+    Parser parser(printer);
+    Interpreter interpreter(printer);
+    std::string source = "var x = 0;"
+                         "za(var i = 0; i < 10; i = i + 1) x = x + 1;";
+    ast::Program program = parser.parse(source);
+    interpreter.visitProgram(&program);
+    std::shared_ptr<Environment> env = interpreter.environment;
+    auto a = env->variables.find("x");
+    REQUIRE(a->second.first->type == ValueType::Number);
+    std::shared_ptr<NumericValue> value = std::dynamic_pointer_cast<NumericValue>(a->second.first);
+    REQUIRE(value->value == 10);
+}

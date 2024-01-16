@@ -135,7 +135,7 @@ TEST_CASE("Correctly tokenizes identifiers", "[Lexer]") {
 }
 
 TEST_CASE("Correctly tokenizes keywords", "[Lexer]") {
-    std::string source = "var konst ako inace dok prazno tacno netacno print onda";
+    std::string source = "var konst ako inace dok prazno tacno netacno print onda za";
     MockErrorPrinter printer;
     Lexer lexer(source);
     try {
@@ -144,7 +144,7 @@ TEST_CASE("Correctly tokenizes keywords", "[Lexer]") {
         std::cout << err.what() << "\n";
     }
 
-    REQUIRE(lexer.tokens.size() == 11);
+    REQUIRE(lexer.tokens.size() == 12);
     checkTypeAndContent(lexer, 0, TokenType::Var, "var");
     checkTypeAndContent(lexer, 1, TokenType::Konst, "konst");
     checkTypeAndContent(lexer, 2, TokenType::Ako, "ako");
@@ -155,6 +155,7 @@ TEST_CASE("Correctly tokenizes keywords", "[Lexer]") {
     checkTypeAndContent(lexer, 7, TokenType::Netacno, "netacno");
     checkTypeAndContent(lexer, 8, TokenType::Print, "print");
     checkTypeAndContent(lexer, 9, TokenType::Onda, "onda");
+    checkTypeAndContent(lexer, 10, TokenType::Za, "za");
 //    checkTypeAndContent(lexer, 10, TokenType::Print, "ili");
 //    checkTypeAndContent(lexer, 11, TokenType::Print, "u");
 //    checkTypeAndContent(lexer, 12, TokenType::Print, "protivnom");

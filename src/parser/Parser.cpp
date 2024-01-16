@@ -97,6 +97,9 @@ std::shared_ptr<ast::Statement> Parser::statement(){
     if(atType(TokenType::Dok)){
         return whileStatement();
     }
+    if(atType(TokenType::Za)){
+        return forStatement();
+    }
     if(atType(TokenType::OpenBrace)){
         return std::make_shared<ast::BlockStatement>(block());
     }
@@ -132,6 +135,63 @@ std::shared_ptr<ast::Statement> Parser::whileStatement() {
     StmtPtr body = statement();
     return std::make_shared<ast::WhileStatement>(condition, body);
 }
+
+StmtPtr Parser::forStatement() {
+    advance();
+    if(!consume(TokenType::OpenParen)){
+        throw ExpectedXBeforeY(previous(), "(", at(), at().value);
+    }
+    StmtPtr initializer = nullptr;
+    if(atType(TokenType::Semicolon)){
+        advance();
+    } else if(atType(TokenType::Var)){
+        initializer = varDeclarationStatement();
+    } else {
+        initializer = expressionStatement();
+    }
+
+    ExprPtr condition = nullptr;
+    if(!atType(TokenType::Semicolon)){
+        condition = expression();
+    }
+    if(!consume(TokenType::Semicolon)){
+        throw ExpectedXBeforeY(previous(), ";", at(), at().value);
+    }
+
+    ExprPtr increment = nullptr;
+    if(!atType(TokenType::ClosedParen)){
+        increment = expression();
+    }
+    if(!consume(TokenType::ClosedParen)){
+        throw ExpectedXBeforeY(previous(), ")", at(), at().value);
+    }
+
+    StmtPtr body = statement();
+    /*
+     * print a;
+     *
+     *
+     */
+    if(increment != nullptr){
+        std::vector<std::shared_ptr<ast::Statement>> newBody = {body, increment};
+        body = std::make_shared<ast::BlockStatement>(newBody);
+    }
+
+    if(condition == nullptr) {
+        std::shared_ptr<Token> trueToken = std::make_shared<Token>(TokenType::Tacno, "tacno", 0, 0);
+        condition = std::make_shared<ast::BooleanLiteral>(trueToken);
+    }
+
+    body = std::make_shared<ast::WhileStatement>(condition, body);
+
+    if(initializer != nullptr){
+        std::vector<std::shared_ptr<ast::Statement>> newBody = {initializer, body};
+        body = std::make_shared<ast::BlockStatement>(newBody);
+    }
+
+    return body;
+}
+
 
 std::vector<std::shared_ptr<ast::Statement>> Parser::block(){
     advance();
