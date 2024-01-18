@@ -18,6 +18,9 @@
 #include "BlockStatement.h"
 #include "IfStatement.h"
 #include "WhileStatement.h"
+#include "CallExpression.h"
+#include "FunctionDeclaration.h"
+#include "ReturnStatement.h"
 #include "exceptions/ExpectedXBeforeY.h"
 #include "exceptions/UninitializedConst.h"
 #include "exceptions/InvalidLValue.h"
@@ -100,10 +103,51 @@ std::shared_ptr<ast::Statement> Parser::statement(){
     if(atType(TokenType::Za)){
         return forStatement();
     }
+    if(atType(TokenType::Vrati)){
+        return returnStatement();
+    }
     if(atType(TokenType::OpenBrace)){
         return std::make_shared<ast::BlockStatement>(block());
     }
+    if(atType(TokenType::Funkcija)){
+        return functionDeclaration("function");
+    }
     return expressionStatement();
+}
+
+std::shared_ptr<ast::Statement> Parser::functionDeclaration(std::string kind) {
+    advance();
+    if(!atType(TokenType::Identifikator)){
+        std::string expectedWhat = kind + " identifier";
+        printer.expectedXBeforeY(previous(), expectedWhat, at(), at().value);
+        throw std::runtime_error("Parser error.");
+    }
+    std::shared_ptr<Token> name = advance();
+    if(!consume(TokenType::OpenParen)){
+        printer.expectedXBeforeY(previous(), "(", at(), at().value);
+        throw std::runtime_error("Parser error.");
+    }
+    std::vector<std::shared_ptr<Token>> parameters{};
+    if(!atType(TokenType::ClosedParen)){
+        do{
+            if(!atType(TokenType::Identifikator)){
+                printer.expectedXBeforeY(previous(), "parameter name", at(), at().value);
+                throw std::runtime_error("Parser error.");
+            }
+            parameters.push_back(advance());
+        }while(consume(TokenType::Comma));
+    }
+    if(!consume(TokenType::ClosedParen)){
+        printer.expectedXBeforeY(previous(), ")", at(), at().value);
+        throw std::runtime_error("Parser error.");
+    }
+    std::vector<std::shared_ptr<ast::Statement>> body{};
+    if(!atType(TokenType::OpenBrace)){
+        printer.expectedXBeforeY(previous(), "{", at(), at().value);
+        throw std::runtime_error("Parser error.");
+    }
+    body = block();
+    return std::make_shared<ast::FunctionDeclaration>(name, parameters, body);
 }
 
 std::shared_ptr<ast::Statement> Parser::ifStatement() {
@@ -167,11 +211,6 @@ StmtPtr Parser::forStatement() {
     }
 
     StmtPtr body = statement();
-    /*
-     * print a;
-     *
-     *
-     */
     if(increment != nullptr){
         std::vector<std::shared_ptr<ast::Statement>> newBody = {body, increment};
         body = std::make_shared<ast::BlockStatement>(newBody);
@@ -192,6 +231,19 @@ StmtPtr Parser::forStatement() {
     return body;
 }
 
+StmtPtr Parser::returnStatement() {
+    std::shared_ptr<Token> keyword = advance();
+    ExprPtr value = nullptr;
+    if(!atType(TokenType::Semicolon)){
+        value = expression();
+    }
+
+    if(!consume(TokenType::Semicolon)){
+        throw ExpectedXBeforeY(previous(), ";", at(), at().value);
+    }
+
+    return std::make_shared<ast::ReturnStatement>(keyword, value);
+}
 
 std::vector<std::shared_ptr<ast::Statement>> Parser::block(){
     advance();
@@ -313,7 +365,35 @@ ExprPtr Parser::unaryExpression(){
         ExprPtr right = unaryExpression();
         return std::make_shared<ast::UnaryExpression>(op, right);
     }
-    return primaryExpression();
+    return callExpression();
+}
+
+ExprPtr Parser::callExpression(){
+    ExprPtr expr = primaryExpression();
+    while(true){
+        if(atType(TokenType::OpenParen)){
+            advance();
+            expr = finishCall(expr);
+        } else {
+            break;
+        }
+    }
+    return expr;
+}
+
+ExprPtr Parser::finishCall(ExprPtr callee){
+    std::vector<ExprPtr> arguments{};
+    if(!atType(TokenType::ClosedParen)){
+        do{
+            arguments.push_back(expression());
+        }while(consume(TokenType::Comma));
+    }
+    if(!atType(TokenType::ClosedParen)){
+        printer.expectedXBeforeY(previous(), ")", at(), at().value);
+        throw std::runtime_error("Parser error.");
+    }
+    std::shared_ptr<Token> paren = advance();
+    return std::make_shared<ast::CallExpression>(callee, paren, arguments);
 }
 
 ExprPtr Parser::primaryExpression(){
@@ -356,6 +436,8 @@ void Parser::synchronize() {
         }
         switch (at().type) {
             // Fali klasa funkcija for i return
+            case TokenType::Za:
+            case TokenType::Funkcija:
             case TokenType::Var:
             case TokenType::Konst:
             case TokenType::Ako:

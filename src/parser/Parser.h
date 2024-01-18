@@ -60,9 +60,11 @@ private:
     StmtPtr varDeclarationStatement();
     StmtPtr statement();
     StmtPtr printStatement();
+    StmtPtr functionDeclaration(std::string kind);
     StmtPtr ifStatement();
     StmtPtr whileStatement();
     StmtPtr forStatement();
+    StmtPtr returnStatement();
     StmtPtr expressionStatement();
     ExprPtr expression();
     ExprPtr assignmentExpression();
@@ -73,6 +75,8 @@ private:
     ExprPtr additiveExpression();
     ExprPtr multiplicativeExpression();
     ExprPtr unaryExpression();
+    ExprPtr callExpression();
+    ExprPtr finishCall(ExprPtr callee);
     ExprPtr primaryExpression();
     void synchronize();
     std::vector<std::shared_ptr<ast::Statement>> block();

@@ -128,6 +128,14 @@
 					"path" : "C:/Users/kemal/CLionProjects/Maturski/src/parser/ast/statements"
 				},
 				{
+					"backtrace" : 6,
+					"path" : "C:/Users/kemal/CLionProjects/Maturski/src/interpreter/nativeFunctions"
+				},
+				{
+					"backtrace" : 6,
+					"path" : "C:/Users/kemal/CLionProjects/Maturski/src/interpreter/controlFlowExceptions"
+				},
+				{
 					"backtrace" : 7,
 					"path" : "C:/Users/kemal/CLionProjects/Maturski/tests/lib/Catch2/src/catch2/.."
 				},

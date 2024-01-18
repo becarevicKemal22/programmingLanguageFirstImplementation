@@ -15,5 +15,9 @@ std::string stringifyRuntimeType(ValueType type) {
             return "Rijec";
         case ValueType::Null:
             return "Prazno";
+        case ValueType::Callable:
+            return "Callable";
+        case ValueType::Function:
+            return "Funkcija";
     }
 }

@@ -107,6 +107,14 @@
 					"path" : "C:/Users/kemal/CLionProjects/Maturski/src/parser/ast/statements"
 				},
 				{
+					"backtrace" : 6,
+					"path" : "C:/Users/kemal/CLionProjects/Maturski/src/interpreter/nativeFunctions"
+				},
+				{
+					"backtrace" : 6,
+					"path" : "C:/Users/kemal/CLionProjects/Maturski/src/interpreter/controlFlowExceptions"
+				},
+				{
 					"backtrace" : 2,
 					"path" : "C:/Users/kemal/CLionProjects/Maturski/tests/lib/Catch2/src/catch2/.."
 				},
@@ -163,13 +171,16 @@
 				16,
 				17,
 				18,
-				20,
+				19,
 				21,
 				22,
 				23,
 				24,
 				25,
-				26
+				26,
+				27,
+				28,
+				29
 			]
 		}
 	],
@@ -177,11 +188,11 @@
 	[
 		{
 			"backtrace" : 2,
-			"id" : "Catch2::@7680d6efaf63c1d2fbac"
+			"id" : "Catch2WithMain::@7680d6efaf63c1d2fbac"
 		},
 		{
 			"backtrace" : 2,
-			"id" : "Catch2WithMain::@7680d6efaf63c1d2fbac"
+			"id" : "Catch2::@7680d6efaf63c1d2fbac"
 		}
 	],
 	"id" : "tests::@a44f0ac069e85531cdee",
@@ -245,13 +256,16 @@
 				16,
 				17,
 				18,
-				20,
+				19,
 				21,
 				22,
 				23,
 				24,
 				25,
-				26
+				26,
+				27,
+				28,
+				29
 			]
 		},
 		{
@@ -259,7 +273,7 @@
 			"sourceIndexes" : 
 			[
 				4,
-				19
+				20
 			]
 		}
 	],
@@ -322,6 +336,12 @@
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
 			"path" : "src/interpreter/Environment.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/interpreter/nativeFunctions/ClockFunction.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
@@ -416,13 +436,25 @@
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
-			"path" : "tests/ParserWhileLoopTest.cpp",
+			"path" : "tests/ParserLoopTest.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
-			"path" : "tests/InterpreterWhileLoopTest.cpp",
+			"path" : "tests/InterpreterLoopTest.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "tests/ParserFunctionTest.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "tests/InterpreterFunctionTest.cpp",
 			"sourceGroupIndex" : 0
 		}
 	],

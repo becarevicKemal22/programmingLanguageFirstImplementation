@@ -12,6 +12,8 @@ enum class ValueType {
     Boolean,
     String,
     Null,
+    Callable,
+    Function,
 };
 
 std::string stringifyRuntimeType(ValueType type);

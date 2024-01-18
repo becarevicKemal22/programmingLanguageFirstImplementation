@@ -8,7 +8,7 @@
 enum class TokenType{
     Eof,
     OpenParen, ClosedParen, OpenBrace, ClosedBrace, OpenBracket, ClosedBracket,
-    Var, Konst, Ako, Inace, Onda, Dok, Za, Print, Identifikator, Broj, String, Prazno, Tacno, Netacno,
+    Var, Konst, Ako, Inace, Onda, Dok, Za, Print, Identifikator, Broj, String, Prazno, Tacno, Netacno, Funkcija, Vrati,
     Plus, Minus, Star, Slash, Percent,
     Semicolon, Colon, Comma, Dot, Bang, BangEqual, Less, LessEqual, Greater, GreaterEqual,
     Equal, DoubleEqual, LogicalOr, LogicalAnd,
