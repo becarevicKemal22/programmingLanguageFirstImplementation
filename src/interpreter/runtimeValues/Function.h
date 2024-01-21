@@ -17,12 +17,13 @@ class Interpreter;
 
 class Function : public Callable {
 public:
-    Function(std::shared_ptr<ast::FunctionDeclaration> declaration) : Callable(ValueType::Function, nullptr, nullptr) {
+    Function(std::shared_ptr<ast::FunctionDeclaration> declaration, std::shared_ptr<Environment> closure) : Callable(ValueType::Function, nullptr, nullptr) {
+        this->closure = *closure;
         this->declaration = declaration;
     }
 
     RuntimeValuePtr call(Interpreter *interpreter, std::vector<RuntimeValuePtr> arguments) override {
-        Environment environment(interpreter->globals);
+        Environment environment(&closure);
         for(int i = 0; i < declaration->params.size(); i++){
             environment.define(declaration->params[i], arguments[i], false);
         }
@@ -50,6 +51,7 @@ public:
 private:
     unsigned int timesCalled_ = 0;
     std::shared_ptr<ast::FunctionDeclaration> declaration;
+    Environment closure;
 };
 
 #endif //MATURSKI_FUNCTION_H

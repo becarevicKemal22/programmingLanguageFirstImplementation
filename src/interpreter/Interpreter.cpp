@@ -419,7 +419,7 @@ RuntimeValuePtr Interpreter::visitLogicalExpression(const ast::LogicalExpression
 }
 
 RuntimeValuePtr Interpreter::visitFunctionDeclaration(const ast::FunctionDeclaration *stmt) {
-    std::shared_ptr<Function> function = std::make_shared<Function>(std::make_shared<ast::FunctionDeclaration>(*stmt));
+    std::shared_ptr<Function> function = std::make_shared<Function>(std::make_shared<ast::FunctionDeclaration>(*stmt), environment);
     environment->define(stmt->name, function, true);
     return std::make_shared<NullValue>();
 }
