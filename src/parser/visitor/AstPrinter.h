@@ -6,7 +6,7 @@
 #define MATURSKI_VISITORPRINTER_H
 
 #include <iostream>
-#include "Visitor.h"
+#include "../../Visitor/Visitor.h"
 #include "Statement.h"
 #include "Expression.h"
 #include "BinaryExpression.h"
@@ -16,8 +16,8 @@
 // AST PRINTER AND VISITOR CLASSES ARE NOT IN USE. DO NOT MODIFY.
 
 using std::cout;
-
-class AstPrinter : public Visitor {
+/*
+class AstPrinter : public visitor {
     // Statements
     void visitStatement(const ast::Statement* statement) const override{
         cout << "";
@@ -39,5 +39,5 @@ class AstPrinter : public Visitor {
         cout << identifier->name << " ";
     }
 };
-
+*/
 #endif //MATURSKI_VISITORPRINTER_H

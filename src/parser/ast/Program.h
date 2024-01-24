@@ -19,11 +19,9 @@ namespace ast{
         }
         std::vector<std::shared_ptr<Statement>> body;
         void printAST(){
-            AstPrinter* printer = new AstPrinter();
             for(auto stmt : body){
                 stmt->print();
             }
-            delete printer;
         }
         void print() override {};
     };

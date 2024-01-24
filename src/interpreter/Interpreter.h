@@ -9,60 +9,37 @@
 #include "Callable.h"
 #include "ErrorPrinter.h"
 #include "Environment.h"
+#include "../Visitor/Visitor.h"
 
-namespace ast {
-    class Program;
-    class Expression;
-    class NumericLiteral;
-    class Statement;
-    class BooleanLiteral;
-    class NullLiteral;
-    class Identifier;
-    class GroupingExpression;
-    class UnaryExpression;
-    class BinaryExpression;
-    class StringLiteral;
-    class ExprStatement;
-    class PrintStatement;
-    class VarDeclaration;
-    class AssignmentExpression;
-    class BlockStatement;
-    class IfStatement;
-    class WhileStatement;
-    class LogicalExpression;
-    class CallExpression;
-    class FunctionDeclaration;
-    class ReturnStatement;
-}
 
-class Interpreter {
+class Interpreter : public Visitor<RuntimeValuePtr> {
 public:
     Interpreter(ErrorPrinter& printer);
     RuntimeValuePtr execute(const ast::Statement* statement);
-    RuntimeValuePtr visitProgram(const ast::Program* stmt);
-    RuntimeValuePtr visitStatement(const ast::Statement* stmt);
-    RuntimeValuePtr visitExprStatement(const ast::ExprStatement* stmt);
-    RuntimeValuePtr visitFunctionDeclaration(const ast::FunctionDeclaration* stmt);
-    RuntimeValuePtr visitPrintStatement(const ast::PrintStatement* stmt);
-    RuntimeValuePtr visitVarDeclarationStatement(const ast::VarDeclaration* stmt);
-    RuntimeValuePtr visitBlockStatement(const ast::BlockStatement* stmt);
-    RuntimeValuePtr visitIfStatement(const ast::IfStatement* stmt);
-    RuntimeValuePtr visitWhileStatement(const ast::WhileStatement* stmt);
-    RuntimeValuePtr visitReturnStatement(const ast::ReturnStatement* stmt);
+    RuntimeValuePtr visitProgram(const ast::Program* stmt) override;
+    RuntimeValuePtr visitStatement(const ast::Statement* stmt) override;
+    RuntimeValuePtr visitExprStatement(const ast::ExprStatement* stmt) override;
+    RuntimeValuePtr visitFunctionDeclaration(const ast::FunctionDeclaration* stmt) override;
+    RuntimeValuePtr visitPrintStatement(const ast::PrintStatement* stmt) override;
+    RuntimeValuePtr visitVarDeclarationStatement(const ast::VarDeclaration* stmt) override;
+    RuntimeValuePtr visitBlockStatement(const ast::BlockStatement* stmt) override;
+    RuntimeValuePtr visitIfStatement(const ast::IfStatement* stmt) override;
+    RuntimeValuePtr visitWhileStatement(const ast::WhileStatement* stmt) override;
+    RuntimeValuePtr visitReturnStatement(const ast::ReturnStatement* stmt) override;
     void executeBlock(std::vector<std::shared_ptr<ast::Statement>> statements, std::shared_ptr<Environment> environment);
 
-    RuntimeValuePtr visitExpression(const ast::Expression* expr);
-    RuntimeValuePtr visitNumericLiteral(const ast::NumericLiteral* expr);
-    RuntimeValuePtr visitBooleanLiteral(const ast::BooleanLiteral* expr);
-    RuntimeValuePtr visitStringLiteral(const ast::StringLiteral* expr);
-    RuntimeValuePtr visitNullLiteral(const ast::NullLiteral* expr);
-    RuntimeValuePtr visitIdentifierExpression(const ast::Identifier* expr);
-    RuntimeValuePtr visitGroupingExpression(const ast::GroupingExpression* expr);
-    RuntimeValuePtr visitUnaryExpression(const ast::UnaryExpression* expr);
-    RuntimeValuePtr visitBinaryExpression(const ast::BinaryExpression* expr);
-    RuntimeValuePtr visitAssignmentExpression(const ast::AssignmentExpression* expr);
-    RuntimeValuePtr visitLogicalExpression(const ast::LogicalExpression* expr);
-    RuntimeValuePtr visitCallExpression(const ast::CallExpression* expr);
+    RuntimeValuePtr visitExpression(const ast::Expression* expr) override;
+    RuntimeValuePtr visitNumericLiteral(const ast::NumericLiteral* expr) override;
+    RuntimeValuePtr visitBooleanLiteral(const ast::BooleanLiteral* expr) override;
+    RuntimeValuePtr visitStringLiteral(const ast::StringLiteral* expr) override;
+    RuntimeValuePtr visitNullLiteral(const ast::NullLiteral* expr) override;
+    RuntimeValuePtr visitIdentifierExpression(const ast::Identifier* expr) override;
+    RuntimeValuePtr visitGroupingExpression(const ast::GroupingExpression* expr) override;
+    RuntimeValuePtr visitUnaryExpression(const ast::UnaryExpression* expr) override;
+    RuntimeValuePtr visitBinaryExpression(const ast::BinaryExpression* expr) override;
+    RuntimeValuePtr visitAssignmentExpression(const ast::AssignmentExpression* expr) override;
+    RuntimeValuePtr visitLogicalExpression(const ast::LogicalExpression* expr) override;
+    RuntimeValuePtr visitCallExpression(const ast::CallExpression* expr) override;
     bool hadRuntimeError = false;
     std::shared_ptr<Environment> globals;
     std::shared_ptr<Environment> environment;
