@@ -23,6 +23,9 @@ namespace ast {
         RuntimeValuePtr accept(Interpreter *visitor) const override {
             return visitor->visitIfStatement(this);
         }
+        void accept(Resolver* visitor) const override {
+            return visitor->visitIfStatement(this);
+        }
 
         void print() override {
             std::cout << "ako ";

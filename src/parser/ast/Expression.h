@@ -19,6 +19,9 @@ namespace ast {
         RuntimeValuePtr accept(Interpreter* visitor) const override{
             return visitor->visitExpression(this);
         };
+        void accept(Resolver* visitor) const override{
+            return visitor->visitExpression(this);
+        };
         virtual void print() override {};
     };
     typedef std::shared_ptr<Expression> ExprPtr;

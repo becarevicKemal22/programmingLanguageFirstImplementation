@@ -15,6 +15,8 @@
 class Interpreter : public Visitor<RuntimeValuePtr> {
 public:
     Interpreter(ErrorPrinter& printer);
+    ~Interpreter() override = default;
+
     RuntimeValuePtr execute(const ast::Statement* statement);
     RuntimeValuePtr visitProgram(const ast::Program* stmt) override;
     RuntimeValuePtr visitStatement(const ast::Statement* stmt) override;
@@ -26,7 +28,6 @@ public:
     RuntimeValuePtr visitIfStatement(const ast::IfStatement* stmt) override;
     RuntimeValuePtr visitWhileStatement(const ast::WhileStatement* stmt) override;
     RuntimeValuePtr visitReturnStatement(const ast::ReturnStatement* stmt) override;
-    void executeBlock(std::vector<std::shared_ptr<ast::Statement>> statements, std::shared_ptr<Environment> environment);
 
     RuntimeValuePtr visitExpression(const ast::Expression* expr) override;
     RuntimeValuePtr visitNumericLiteral(const ast::NumericLiteral* expr) override;
@@ -40,11 +41,19 @@ public:
     RuntimeValuePtr visitAssignmentExpression(const ast::AssignmentExpression* expr) override;
     RuntimeValuePtr visitLogicalExpression(const ast::LogicalExpression* expr) override;
     RuntimeValuePtr visitCallExpression(const ast::CallExpression* expr) override;
+
+    void executeBlock(std::vector<std::shared_ptr<ast::Statement>> statements, std::shared_ptr<Environment> environment);
+    void resolve(const ast::Expression* expr, int depth){
+        locals[expr] = depth;
+    }
+    RuntimeValuePtr lookUpVariable(std::string name, const ast::Expression* expr);
+
     bool hadRuntimeError = false;
+    std::unordered_map<const ast::Expression*, int> locals;
     std::shared_ptr<Environment> globals;
     std::shared_ptr<Environment> environment;
-private:
     ErrorPrinter& printer;
+private:
     RuntimeValuePtr evaluate(ast::Expression* expr);
     bool isTruthy(RuntimeValuePtr value);
     bool areOperandsNumeric(RuntimeValuePtr left, RuntimeValuePtr right);

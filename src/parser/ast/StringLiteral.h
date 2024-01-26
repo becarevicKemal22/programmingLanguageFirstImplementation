@@ -27,6 +27,9 @@ namespace ast{
         RuntimeValuePtr accept(Interpreter* visitor) const override{
             return visitor->visitStringLiteral(this);
         }
+        void accept(Resolver* visitor) const override{
+            return visitor->visitStringLiteral(this);
+        }
         void print() override {
             std::cout << "\"" + value + "\"" << " ";
         }

@@ -8,7 +8,6 @@
 #include <vector>
 #include <memory>
 #include "Statement.h"
-#include "AstPrinter.h"
 
 namespace ast{
 

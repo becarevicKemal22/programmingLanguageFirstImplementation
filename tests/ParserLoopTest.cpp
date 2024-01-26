@@ -14,6 +14,7 @@
 #include "BypassExpressionStatement.h"
 #include "VarDeclaration.h"
 #include "AssignmentExpression.h"
+#include "BinaryExpression.h"
 
 TEST_CASE("Parses while loop with block", "[Parser][Loop][While]") {
     MockErrorPrinter printer;

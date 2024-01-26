@@ -113,10 +113,6 @@
 				},
 				{
 					"backtrace" : 6,
-					"path" : "C:/Users/kemal/CLionProjects/Maturski/src/parser/visitor"
-				},
-				{
-					"backtrace" : 6,
 					"path" : "C:/Users/kemal/CLionProjects/Maturski/src/interpreter"
 				},
 				{
@@ -134,6 +130,14 @@
 				{
 					"backtrace" : 6,
 					"path" : "C:/Users/kemal/CLionProjects/Maturski/src/interpreter/controlFlowExceptions"
+				},
+				{
+					"backtrace" : 6,
+					"path" : "C:/Users/kemal/CLionProjects/Maturski/src/visitor"
+				},
+				{
+					"backtrace" : 6,
+					"path" : "C:/Users/kemal/CLionProjects/Maturski/src/parser/resolver"
 				},
 				{
 					"backtrace" : 7,

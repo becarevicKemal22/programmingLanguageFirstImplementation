@@ -4,6 +4,8 @@
 
 #include "Interpreter.h"
 #include "NumericLiteral.h"
+#include "Identifier.h"
+#include "BinaryExpression.h"
 #include "Statement.h"
 #include "Program.h"
 #include "NumericValue.h"
@@ -102,7 +104,16 @@ RuntimeValuePtr Interpreter::visitNullLiteral(const ast::NullLiteral *expr) {
 }
 
 RuntimeValuePtr Interpreter::visitIdentifierExpression(const ast::Identifier *expr) {
-    return environment->get(expr->token);
+    return lookUpVariable(expr->name, expr);
+}
+
+RuntimeValuePtr Interpreter::lookUpVariable(std::string name, const ast::Expression* expr) {
+    auto distance = locals.find(expr);
+    if(distance != locals.end()){
+        return environment->getAt(distance->second, name);
+    } else {
+        return globals->get(std::make_shared<Token>(TokenType::Identifikator, name, 0, 0));
+    }
 }
 
 RuntimeValuePtr Interpreter::visitGroupingExpression(const ast::GroupingExpression *expr) {
@@ -342,7 +353,14 @@ RuntimeValuePtr Interpreter::visitVarDeclarationStatement(const ast::VarDeclarat
 
 RuntimeValuePtr Interpreter::visitAssignmentExpression(const ast::AssignmentExpression *expr) {
     RuntimeValuePtr value = evaluate(expr->value.get());
-    environment->assign(expr->identifier, value);
+
+    auto distance = locals.find(expr);
+    if(distance != locals.end()){
+        environment->assignAt(distance->second, expr->identifier->value, value);
+    } else {
+        globals->assign(expr->identifier, value);
+    }
+
     return value;
 }
 

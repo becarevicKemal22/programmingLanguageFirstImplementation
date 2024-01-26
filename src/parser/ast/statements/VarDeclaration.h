@@ -23,12 +23,15 @@ namespace ast{
         RuntimeValuePtr accept(Interpreter* visitor) const override {
             return visitor->visitVarDeclarationStatement(this);
         }
+        void accept(Resolver* visitor) const override {
+            return visitor->visitVarDeclarationStatement(this);
+        }
         void print() override {
             std::cout << "VarDecl( " << identifier->value << " = ";
             if(initializer){
                 initializer->print();
             }else{
-                cout << "prazno ";
+                std::cout << "prazno ";
             }
             std::cout << ")\n";
         }

@@ -7,6 +7,7 @@
 
 #include <memory>
 #include "Interpreter.h"
+#include "Resolver.h"
 
 namespace ast {
     class Statement{
@@ -14,6 +15,9 @@ namespace ast {
         Statement() = default;
         virtual ~Statement() = default;
         virtual RuntimeValuePtr accept(Interpreter* visitor) const {
+            return visitor->visitStatement(this);
+        };
+        virtual void accept(Resolver* visitor) const {
             return visitor->visitStatement(this);
         };
         virtual void print() = 0;

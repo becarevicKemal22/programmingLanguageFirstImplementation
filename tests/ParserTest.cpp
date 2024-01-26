@@ -18,6 +18,7 @@
 #include "UnaryExpression.h"
 #include "StringLiteral.h"
 #include "ExprStatement.h"
+#include "Identifier.h"
 
 template <typename T>
 std::shared_ptr<T> bypassExpressionStatement(std::shared_ptr<ast::Statement> stmt){

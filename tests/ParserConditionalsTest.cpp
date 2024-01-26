@@ -13,6 +13,7 @@
 #include "AssignmentExpression.h"
 #include "PrintStatement.h"
 #include "BlockStatement.h"
+#include "BinaryExpression.h"
 
 TEST_CASE("Parses if statement", "[parser][conditional][statement]"){
     std::string source = "ako x == 5 onda {"

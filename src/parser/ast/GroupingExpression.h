@@ -23,6 +23,9 @@ namespace ast{
         RuntimeValuePtr accept(Interpreter* visitor) const override {
             return visitor->visitGroupingExpression(this);
         };
+        void accept(Resolver* visitor) const override {
+            return visitor->visitGroupingExpression(this);
+        };
     };
 }
 

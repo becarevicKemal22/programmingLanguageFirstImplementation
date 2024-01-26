@@ -25,7 +25,9 @@ namespace ast {
         RuntimeValuePtr accept(Interpreter *visitor) const override {
             return visitor->visitFunctionDeclaration(this);
         }
-
+        void accept(Resolver* visitor) const override {
+            return visitor->visitFunctionDeclaration(this);
+        }
         void print() override {
             std::cout << "funkcija " << name->value << "(";
             for (auto param : params) {

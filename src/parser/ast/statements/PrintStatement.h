@@ -19,6 +19,9 @@ namespace ast{
         RuntimeValuePtr accept(Interpreter* visitor) const override {
             return visitor->visitPrintStatement(this);
         }
+        void accept(Resolver* visitor) const override {
+            return visitor->visitPrintStatement(this);
+        }
         void print() override{
             std::cout << "PrintStatement( ";
             expr->print();

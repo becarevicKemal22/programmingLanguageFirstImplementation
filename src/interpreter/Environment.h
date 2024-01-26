@@ -42,6 +42,21 @@ public:
      * @throws ConstReassignment Throws if assign is called on a constant variable
      */
     void assign(std::shared_ptr<Token> name, RuntimeValuePtr value);
+
+    RuntimeValuePtr getAt(int distance, const std::string& name){
+        return ancestor(distance)->variables[name].first;
+    }
+
+    Environment* ancestor(int distance) {
+        Environment *environment = this;
+        for (int i = 0; i < distance; i++) {
+            environment = environment->parent;
+        }
+        return environment;
+    }
+    void assignAt(int distance, const std::string& name, RuntimeValuePtr value){
+        ancestor(distance)->variables[name].first = std::move(value);
+    }
 };
 
 

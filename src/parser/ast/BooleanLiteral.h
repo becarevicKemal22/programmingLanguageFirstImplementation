@@ -25,6 +25,9 @@ namespace ast{
         RuntimeValuePtr accept(Interpreter* visitor) const override {
             return visitor->visitBooleanLiteral(this);
         };
+        void accept(Resolver* visitor) const override {
+            return visitor->visitBooleanLiteral(this);
+        };
     };
 }
 

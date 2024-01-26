@@ -9,6 +9,8 @@
 #include "Lexer.h"
 #include "MockErrorPrinter.h"
 #include "VarDeclaration.h"
+#include "NumericLiteral.h"
+#include "BinaryExpression.h"
 
 TEST_CASE("Parses valid variable declarations", "[Parser][Declaration][Variables]"){
     MockErrorPrinter printer;

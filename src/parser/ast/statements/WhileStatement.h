@@ -22,7 +22,9 @@ namespace ast {
         RuntimeValuePtr accept(Interpreter *visitor) const override {
             return visitor->visitWhileStatement(this);
         }
-
+        void accept(Resolver* visitor) const override {
+            return visitor->visitWhileStatement(this);
+        }
         void print() override {
             std::cout << "dok ";
             condition->print();

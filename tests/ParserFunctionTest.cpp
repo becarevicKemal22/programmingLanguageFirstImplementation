@@ -14,6 +14,7 @@
 #include "Identifier.h"
 #include "StringLiteral.h"
 #include "ReturnStatement.h"
+#include "BinaryExpression.h"
 
 TEST_CASE("Parses function declaration statement", "[parser][function][statement]"){
     std::string source = "funkcija f(){}";

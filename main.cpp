@@ -5,6 +5,7 @@
 #include "ConsoleErrorPrinter.h"
 #include "Interpreter.h"
 #include "RuntimeValue.h"
+#include "Resolver.h"
 #include <chrono>
 
 void repl() {
@@ -41,7 +42,6 @@ int main(int argc, char *argv[]) {
             Parser parser(printer);
             ast::Program program;
 //            auto start = std::chrono::high_resolution_clock::now();
-
             program = parser.parse(source);
             if (parser.hadError) {
                 exit(1);
@@ -54,6 +54,8 @@ int main(int argc, char *argv[]) {
             std::cout << "\n";
             std::cout << "Program successfully parsed.\n";
             Interpreter interpreter(printer);
+            Resolver resolver(interpreter);
+            resolver.visitProgram(&program);
             RuntimeValuePtr result = interpreter.visitProgram(&program);
             std::cout << "Result: " << result->stringify() << std::endl;
 

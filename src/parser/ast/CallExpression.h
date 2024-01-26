@@ -33,6 +33,9 @@ namespace ast {
         RuntimeValuePtr accept(Interpreter *visitor) const override {
             return visitor->visitCallExpression(this);
         };
+        void accept(Resolver* visitor) const override {
+            return visitor->visitCallExpression(this);
+        }
     };
 }
 

@@ -26,6 +26,9 @@ namespace ast {
         RuntimeValuePtr accept(Interpreter* visitor) const override {
             return visitor->visitBinaryExpression(this);
         }
+        void accept(Resolver* visitor) const override {
+            return visitor->visitBinaryExpression(this);
+        }
         void print() override {
             std::cout << "( " << _operator->value << " ";
             left->print();
